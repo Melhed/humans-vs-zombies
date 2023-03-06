@@ -16,8 +16,9 @@ public class Squad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "squad_id")
     private Long id;
+    @Column(nullable = false, length = 50)
     private String name;
-    @Column(name = "is_human")
+    @Column(name = "is_human", nullable = false)
     private boolean isHuman;
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")

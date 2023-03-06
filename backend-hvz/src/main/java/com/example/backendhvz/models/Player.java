@@ -1,5 +1,7 @@
 package com.example.backendhvz.models;
 
+import com.example.backendhvz.enums.GameState;
+import com.example.backendhvz.enums.PlayerState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,11 +20,15 @@ public class Player {
     @Column(name = "player_id")
     private Long id;
 
-    @Column(name = "is_human")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PlayerState state;
+
+    @Column(name = "is_human", nullable = false)
     private boolean isHuman;
-    @Column(name = "is_patient_zero")
+    @Column(name = "is_patient_zero", nullable = false)
     private boolean isPatientZero;
-    @Column(name = "bite_code")
+    @Column(name = "bite_code", length = 3)
     private String biteCode;
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

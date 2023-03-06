@@ -18,7 +18,7 @@ public class Kill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "kill_id")
     private Long id;
-    @Column(name = "time_of_death")
+    @Column(name = "time_of_death", nullable = false)
     private Date timeOfDeath;
     private String story;
     private String lat;
