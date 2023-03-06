@@ -1,6 +1,5 @@
 package com.example.backendhvz.models;
 
-import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.enums.PlayerState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
