@@ -30,8 +30,8 @@ public class Player {
     @Column(name = "bite_code", length = 3)
     private String biteCode;
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
+    @JoinColumn(name = "hvzuser_id", referencedColumnName = "hvzuser_id")
+    private HvZUser user;
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     private Game game;

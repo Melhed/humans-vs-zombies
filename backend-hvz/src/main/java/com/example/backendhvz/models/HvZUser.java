@@ -8,15 +8,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
-
+@Entity
+public class HvZUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "hvzuser_id")
     private Long id;
 
     @Column(name = "first_name", nullable = false, length = 50)
