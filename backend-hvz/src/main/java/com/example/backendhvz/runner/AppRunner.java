@@ -2,8 +2,8 @@ package com.example.backendhvz.runner;
 
 import com.example.backendhvz.controllers.GameController;
 import com.example.backendhvz.controllers.MissionController;
-import com.example.backendhvz.controllers.SquadController;
 import com.example.backendhvz.enums.GameState;
+import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.mappers.GameMapper;
 import com.example.backendhvz.mappers.MissionMapper;
 import com.example.backendhvz.mappers.SquadMapper;
@@ -19,9 +19,6 @@ import java.sql.Date;
 
 @Component
 public class AppRunner implements ApplicationRunner {
-
-    private final SquadController squadController;
-    private final SquadMapper squadMapper;
     private final GameController gameController;
     private final GameMapper gameMapper;
     private final MissionController missionController;
@@ -42,11 +39,6 @@ public class AppRunner implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
-        Game game = new Game(1L, "sdklasdksa", GameState.COMPLETE, new Date(2022, 2, 2), new Date(2022, 2, 7), "", "", "", "");
-        gameController.add(gameMapper.gameToGameDto(game));
-        Mission mission = new Mission(1L, "kajaja", true, false, "ez", new Date(2022, 2, 2), new Date(2022, 2, 7), null);
-        missionController.add(1L, missionMapper.missionToMissionDto(mission));
-        System.out.println((missionController.findMissionsByGameId(1L)));
     }
 }
 

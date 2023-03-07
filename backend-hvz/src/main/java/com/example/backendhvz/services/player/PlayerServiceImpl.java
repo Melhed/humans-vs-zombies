@@ -26,6 +26,11 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Collection<Player> findAll(Long gameId) {
+        return playerRepository.findAllByGameId(gameId);
+    }
+
+    @Override
     public Player add(Player player) {
         return playerRepository.save(player);
     }
