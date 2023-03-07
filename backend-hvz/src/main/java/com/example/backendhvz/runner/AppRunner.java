@@ -2,16 +2,17 @@ package com.example.backendhvz.runner;
 
 import com.example.backendhvz.controllers.GameController;
 import com.example.backendhvz.controllers.PlayerController;
+import com.example.backendhvz.controllers.SquadController;
 import com.example.backendhvz.dtos.GameDTO;
 import com.example.backendhvz.dtos.PlayerAdminDTO;
-import com.example.backendhvz.dtos.PlayerDTO;
 import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.enums.PlayerState;
+import com.example.backendhvz.mappers.ChatMapper;
 import com.example.backendhvz.mappers.GameMapper;
 import com.example.backendhvz.mappers.PlayerMapper;
-import com.example.backendhvz.models.Game;
-import com.example.backendhvz.models.HvZUser;
-import com.example.backendhvz.models.Player;
+import com.example.backendhvz.mappers.SquadMapper;
+import com.example.backendhvz.models.*;
+import com.example.backendhvz.repositories.ChatRepository;
 import com.example.backendhvz.repositories.UserRepository;
 import com.example.backendhvz.services.player.PlayerService;
 import jakarta.transaction.Transactional;
@@ -29,14 +30,22 @@ public class AppRunner implements ApplicationRunner {
     private final PlayerMapper playerMapper;
     private final PlayerService playerService;
     private final UserRepository userRepository;
+    private final ChatRepository chatRepository;
+    private final ChatMapper chatMapper;
+    private final SquadController squadController;
+    private final SquadMapper squadMapper;
 
-    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, UserRepository userRepository) {
+    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper) {
         this.gameController = gameController;
         this.gameMapper = gameMapper;
         this.playerController = playerController;
         this.playerMapper = playerMapper;
         this.playerService = playerService;
         this.userRepository = userRepository;
+        this.chatRepository = chatRepository;
+        this.chatMapper = chatMapper;
+        this.squadController = squadController;
+        this.squadMapper = squadMapper;
     }
 
     @Override
@@ -50,11 +59,14 @@ public class AppRunner implements ApplicationRunner {
         Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HT8", user ,game);
         PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
         playerController.add(1L, playerAdminDTO);
-        playerController.findAll(1L);
-        playerController.findById(1L,1L);
         Player newPlayer = new Player(1L, PlayerState.NO_SQUAD, false, false, "HT8", user ,game);
         playerController.update(playerMapper.playerToPlayerAdminDto(newPlayer),1L,1L);
-        playerController.deleteById(1L,1L);
+        Squad squad = new Squad(1L, "squad", true, game);
+        squadController.add(1L, squadMapper.squadToSquadDto(squad));
+        Chat chat = new Chat(1L, "HELO", false, true, new Date(2020,02,15), null, player, squad);
+
+        gameController.addChat(1L, chatMapper.chatToChatDto(chat));
+        System.out.println(gameController.getFactionChat(1L, true));
     }
 }
 

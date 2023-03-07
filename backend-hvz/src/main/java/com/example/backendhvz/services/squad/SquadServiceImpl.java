@@ -16,6 +16,7 @@ public class SquadServiceImpl implements SquadService{
 
     @Override
     public Squad findById(Long squadId) {
+        System.out.println("squadservice:" + squadId);
         if(squadId == null) return null;
         return squadRepository.findById(squadId).get();
     }
