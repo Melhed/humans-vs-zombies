@@ -1,8 +1,11 @@
 package com.example.backendhvz.controllers;
 
+import com.example.backendhvz.dtos.HvZUserDTO;
 import com.example.backendhvz.dtos.PlayerAdminDTO;
 import com.example.backendhvz.dtos.PlayerDTO;
+import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.mappers.PlayerMapper;
+import com.example.backendhvz.models.HvZUser;
 import com.example.backendhvz.models.Player;
 import com.example.backendhvz.services.player.PlayerService;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +36,20 @@ public class PlayerController {
         return ResponseEntity.ok(playerMapper.playersToPlayerDtos(playerService.findAll(gameId)));
     }
 
+    // TODO: Generate bite_code & merge the following two together
     @PostMapping
     public ResponseEntity<PlayerAdminDTO> add(@PathVariable Long gameId, @RequestBody PlayerAdminDTO playerDTO) {
         if (gameId != playerDTO.getGame()) return ResponseEntity.badRequest().build();
         Player player = playerMapper.playerAdminDtoToPlayer(playerDTO);
         URI location = URI.create("/" + player.getId());
-        System.out.println(location.getPath());
         playerService.add(player);
         return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping("u")
+    public ResponseEntity<PlayerDTO> addNewPlayer(@PathVariable Long gameId, @RequestBody HvZUserDTO hvZUserDTO) {
+        playerService.addNewPlayer(gameId, hvZUserDTO);
+        return null;
     }
 
     @PutMapping("{playerId}")
