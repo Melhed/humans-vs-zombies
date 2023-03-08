@@ -1,18 +1,17 @@
 package com.example.backendhvz.runner;
 
 import com.example.backendhvz.controllers.GameController;
+import com.example.backendhvz.controllers.KillController;
 import com.example.backendhvz.controllers.PlayerController;
 import com.example.backendhvz.controllers.SquadController;
 import com.example.backendhvz.dtos.GameDTO;
-import com.example.backendhvz.dtos.PlayerAdminDTO;
+import com.example.backendhvz.dtos.KillPostDTO;
 import com.example.backendhvz.enums.GameState;
-import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.mappers.*;
 import com.example.backendhvz.models.*;
 import com.example.backendhvz.repositories.ChatRepository;
 import com.example.backendhvz.repositories.UserRepository;
 import com.example.backendhvz.services.player.PlayerService;
-import com.example.backendhvz.services.player.PlayerServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -33,8 +32,9 @@ public class AppRunner implements ApplicationRunner {
     private final SquadController squadController;
     private final SquadMapper squadMapper;
     private final HvZUserMapper hvZUserMapper;
+    private final KillController killController;
 
-    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper) {
+    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper, KillController killController) {
         this.gameController = gameController;
         this.gameMapper = gameMapper;
         this.playerController = playerController;
@@ -46,6 +46,7 @@ public class AppRunner implements ApplicationRunner {
         this.squadController = squadController;
         this.squadMapper = squadMapper;
         this.hvZUserMapper = hvZUserMapper;
+        this.killController = killController;
     }
 
     @Override
@@ -58,13 +59,14 @@ public class AppRunner implements ApplicationRunner {
         HvZUser user1 = new HvZUser(null, "Filly", "Foods");
         userRepository.save(user);
         userRepository.save(user1);
-        playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user));
-        playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user1));
-        System.out.println(PlayerServiceImpl.generateBiteCode());
-//        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HT8", user ,game);
+        Player killer = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user));
+        Player victim = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user1));
+        killController.add(1L, new KillPostDTO(killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
+//        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
 //        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
 //        playerController.add(1L, playerAdminDTO);
-//        Player newPlayer = new Player(1L, PlayerState.NO_SQUAD, false, false, "HT8", user ,game);
+//        Player newPlayer = new Player(2L, PlayerState.NO_SQUAD, false, false, "HT8", user ,game);
+//
 //        playerController.update(playerMapper.playerToPlayerAdminDto(newPlayer),1L,1L);
 //        Squad squad = new Squad(1L, "squad", true, game);
 //        squadController.add(1L, squadMapper.squadToSquadDto(squad));

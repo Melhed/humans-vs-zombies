@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class Kill {
     @Column(name = "kill_id")
     private Long id;
     @Column(name = "time_of_death", nullable = false)
-    private Date timeOfDeath;
+    private Timestamp timeOfDeath;
     private String story;
     private String lat;
     private String lng;

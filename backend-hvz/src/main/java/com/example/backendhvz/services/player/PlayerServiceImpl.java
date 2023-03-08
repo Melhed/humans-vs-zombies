@@ -40,15 +40,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player addNewPlayer(Long gameId, HvZUserDTO hvZUserDTO) {
-        if(playerRepository.existsPlayerByBiteCodeAndGame_Id("123", gameId).get()) {
-            System.out.println("nono");
-            return null;
-        }
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setGame(gameId);
         playerDTO.setUser(hvZUserDTO.getId());
         playerDTO.isHuman();
-        playerDTO.setBiteCode("123");
+        String biteCode = generateBiteCode();
+        while (playerRepository.existsPlayerByBiteCodeAndGame_Id(biteCode, gameId).get())
+            biteCode = generateBiteCode();
+        playerDTO.setBiteCode(biteCode);
         playerDTO.setState(PlayerState.UNREGISTERED);
         Player player = playerMapper.playerDtoToPlayer(playerDTO);
         return playerRepository.save(player);

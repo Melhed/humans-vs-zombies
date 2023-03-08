@@ -2,12 +2,12 @@ package com.example.backendhvz.dtos;
 
 import lombok.Data;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 public class KillDTO {
     private long id;
-    private Date timeOfDeath;
+    private Timestamp timeOfDeath;
     private String story;
     private String lat;
     private String lng;
