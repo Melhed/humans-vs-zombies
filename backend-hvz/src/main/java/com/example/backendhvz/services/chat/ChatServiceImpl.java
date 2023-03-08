@@ -37,10 +37,13 @@ public class ChatServiceImpl implements ChatService {
     public Collection<Chat> findAll() {
         return chatRepository.findAll();
     }
+
+    @Override
+    public Collection<Chat> findAllNonSquad() {
+        return chatRepository.findAllBySquad(null).get();
+    }
     @Override
     public Collection<Chat> findAllByGameId(Long gameId, boolean playerIsHuman) {
-        System.out.println(gameId);
-        System.out.println(playerIsHuman);
         if (playerIsHuman) return chatRepository.findAllByGameIdAndHumanGlobal(gameId).get();
         return chatRepository.findAllByGameIdAndZombieGlobal(gameId).get();
     }
@@ -55,9 +58,13 @@ public class ChatServiceImpl implements ChatService {
         }
         return chatRepository.findAllBySquad_IdAndZombieGlobal(squadId).get();
     }
-
     @Override
     public Chat add(Chat chat) {
+        chat.setSquad(null);
+        return chatRepository.save(chat);
+    }
+    @Override
+    public Chat addSquadChat(Chat chat) {
         return chatRepository.save(chat);
     }
 

@@ -12,11 +12,13 @@ import java.util.Optional;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     Optional<Collection<Chat>> findAllByGameId(Long gameId);
+
+    Optional<Collection<Chat>> findAllBySquad(Long squadId);
     @Modifying
-    @Query("select c from Chat c where c.game.id = ?1 and c.isHumanGlobal = true")
+    @Query("select c from Chat c where c.game.id = ?1 and c.isHumanGlobal = true and c.squad = null")
     Optional<Collection<Chat>> findAllByGameIdAndHumanGlobal(Long gameId);
     @Modifying
-    @Query("select c from Chat c where c.game.id = ?1 and c.isZombieGlobal = true")
+    @Query("select c from Chat c where c.game.id = ?1 and c.isZombieGlobal = true and c.squad = null")
     Optional<Collection<Chat>> findAllByGameIdAndZombieGlobal(Long gameId);
     Optional<Chat> findChatByIdAndGameId(Long gameId, Long chatId);
     @Modifying

@@ -68,7 +68,7 @@ public class AppRunner implements ApplicationRunner {
         squadController.add(1L, new SquadPostDTO(1L, "Makaronerna"));
         squadController.join(1L, 1L, 2L);
         gameController.addChat(1L, new ChatDTO(null, "hello", new Timestamp(System.currentTimeMillis()), false, true, 1L, 1L, 1L));
-        System.out.println(squadController.findAllSquadChats(1L, 1L, 1L));
+        System.out.println(squadController.findAllSquadChats(1L, 1L, 2L));
         //        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
 //        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
 //        playerController.add(1L, playerAdminDTO);

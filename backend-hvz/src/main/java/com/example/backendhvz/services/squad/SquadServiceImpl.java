@@ -1,14 +1,8 @@
 package com.example.backendhvz.services.squad;
 
 import com.example.backendhvz.dtos.SquadPostDTO;
-import com.example.backendhvz.models.Game;
-import com.example.backendhvz.models.Player;
-import com.example.backendhvz.models.Squad;
-import com.example.backendhvz.models.SquadMember;
-import com.example.backendhvz.repositories.GameRepository;
-import com.example.backendhvz.repositories.PlayerRepository;
-import com.example.backendhvz.repositories.SquadMemberRepository;
-import com.example.backendhvz.repositories.SquadRepository;
+import com.example.backendhvz.models.*;
+import com.example.backendhvz.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -19,12 +13,14 @@ public class SquadServiceImpl implements SquadService{
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final SquadMemberRepository squadMemberRepository;
+    private final SquadCheckInRepository squadCheckInRepository;
 
-    public SquadServiceImpl(SquadRepository squadRepository, PlayerRepository playerRepository, GameRepository gameRepository, SquadMemberRepository squadMemberRepository) {
+    public SquadServiceImpl(SquadRepository squadRepository, PlayerRepository playerRepository, GameRepository gameRepository, SquadMemberRepository squadMemberRepository, SquadCheckInRepository squadCheckInRepository) {
         this.squadRepository = squadRepository;
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.squadMemberRepository = squadMemberRepository;
+        this.squadCheckInRepository = squadCheckInRepository;
     }
 
     @Override
@@ -94,5 +90,12 @@ public class SquadServiceImpl implements SquadService{
         if (squad.isHuman() != player.isHuman()) return null;
         SquadMember squadMember = new SquadMember(null, false, game, squad, player);
         return squadMemberRepository.save(squadMember);
+    }
+
+    @Override
+    public SquadCheckIn addCheckIn(Long squadId, SquadCheckIn checkIn) {
+        Squad squad = squadRepository.findById(squadId).get();
+        if (squad.isHuman() != checkIn.getSquadMember().getPlayer().isHuman()) return null;
+        return squadCheckInRepository.save(checkIn);
     }
 }
