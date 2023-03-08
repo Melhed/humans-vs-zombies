@@ -50,6 +50,12 @@ public class SquadController {
         return ResponseEntity.ok(chatMapper.chatsToChatDtos(chatService.findAllBySquadIdAndFaction(squadId, playerId)));
     }
 
+    @GetMapping("{squadId}/check-in")
+    public ResponseEntity<Collection<CheckInDTO>> findAllSquadCheckIns(@PathVariable Long gameId, @PathVariable Long squadId, @RequestBody Long playerId) {
+        if(squadId == null || playerId == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(squadCheckInMapper.checkInsTocheckInDTOs(squadService.getSquadCheckIns(squadId, playerId)));
+    }
+
     @PostMapping // POST /game/<game_id>/squad
     public ResponseEntity<SquadDTO> add(@PathVariable Long gameId, @RequestBody SquadPostDTO squadPostDTO) {
         if(squadPostDTO == null) return ResponseEntity.badRequest().build();

@@ -75,7 +75,6 @@ public class SquadServiceImpl implements SquadService{
     public Squad addSquad(Long gameId, SquadPostDTO squadPostDTO) {
         Player player = playerRepository.findById(squadPostDTO.getPlayerId()).get();
         Game game = gameRepository.findById(gameId).get();
-        if(player == null) return null;
         Squad squad = new Squad(null, squadPostDTO.getSquadName(), player.isHuman(), game);
         SquadMember squadMember = new SquadMember(null, true, game, squad, player);
         squadMemberRepository.save(squadMember);
@@ -97,5 +96,14 @@ public class SquadServiceImpl implements SquadService{
         Squad squad = squadRepository.findById(squadId).get();
         if (squad.isHuman() != checkIn.getSquadMember().getPlayer().isHuman()) return null;
         return squadCheckInRepository.save(checkIn);
+    }
+
+    @Override
+    public Collection<SquadCheckIn> getSquadCheckIns(Long squadId, Long playerId) {
+        if(squadId == null) return null;
+        Squad squad = findById(squadId);
+        Player player = playerRepository.findById(playerId).get();
+        if(squad == null || squad.isHuman() != player.isHuman()) return null;
+        return squadCheckInRepository.findAllBySquad_Id(squadId).get();
     }
 }
