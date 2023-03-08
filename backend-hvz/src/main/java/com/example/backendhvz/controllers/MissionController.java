@@ -28,9 +28,9 @@ public class MissionController {
     }
 
     @GetMapping("{missionId}")
-    public ResponseEntity<MissionDTO> findMissionByIdAndGameId(@PathVariable Long gameId, @PathVariable Long missionId) {
-        if(gameId == null || missionId == null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.findMissionByIdAndGameId(gameId, missionId)));
+    public ResponseEntity<MissionDTO> findMissionByIdAndGameId(@PathVariable Long gameId, @PathVariable Long missionId, @RequestBody Long playerId) {
+        if(gameId == null || missionId == null || playerId == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.findMissionByIdAndGameId(gameId, missionId, playerId)));
     }
 
     @PostMapping
