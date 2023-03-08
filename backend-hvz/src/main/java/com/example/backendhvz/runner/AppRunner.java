@@ -11,6 +11,7 @@ import com.example.backendhvz.models.*;
 import com.example.backendhvz.repositories.ChatRepository;
 import com.example.backendhvz.repositories.UserRepository;
 import com.example.backendhvz.services.player.PlayerService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 public class AppRunner implements ApplicationRunner {
     private final GameController gameController;
     private final GameMapper gameMapper;
+
     private final PlayerController playerController;
     private final PlayerMapper playerMapper;
     private final PlayerService playerService;
@@ -47,6 +49,7 @@ public class AppRunner implements ApplicationRunner {
         this.squadMapper = squadMapper;
         this.hvZUserMapper = hvZUserMapper;
         this.killController = killController;
+
     }
 
     @Override
@@ -82,6 +85,7 @@ public class AppRunner implements ApplicationRunner {
 //
 //        gameController.addChat(1L, chatMapper.chatToChatDto(chat));
 //        System.out.println(gameController.getFactionChat(1L, true));
+
     }
 }
 
