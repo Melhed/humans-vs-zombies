@@ -87,4 +87,14 @@ public class SquadServiceImpl implements SquadService{
         squadMemberRepository.save(squadMember);
         return add(squad);
     }
+
+    @Override
+    public SquadMember joinSquad(Long gameId, Long squadId, Long playerId) {
+        Game game = gameRepository.findById(gameId).get();
+        Squad squad = findById(squadId);
+        Player player = playerRepository.findById(playerId).get();
+        if (squad.isHuman() != player.isHuman()) return null;
+        SquadMember squadMember = new SquadMember(null, false, game, squad, player);
+        return squadMemberRepository.save(squadMember);
+    }
 }

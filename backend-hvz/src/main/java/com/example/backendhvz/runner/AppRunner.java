@@ -64,6 +64,7 @@ public class AppRunner implements ApplicationRunner {
         Player victim = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user1));
         killController.add(1L, new KillPostDTO(killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
         squadController.add(1L, new SquadPostDTO(1L, "Makaronerna"));
+        squadController.join(1L, 1L, 2L);
         //        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
 //        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
 //        playerController.add(1L, playerAdminDTO);
