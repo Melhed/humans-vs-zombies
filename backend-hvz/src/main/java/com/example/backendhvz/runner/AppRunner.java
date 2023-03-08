@@ -6,6 +6,7 @@ import com.example.backendhvz.controllers.PlayerController;
 import com.example.backendhvz.controllers.SquadController;
 import com.example.backendhvz.dtos.GameDTO;
 import com.example.backendhvz.dtos.KillPostDTO;
+import com.example.backendhvz.dtos.SquadPostDTO;
 import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.mappers.*;
 import com.example.backendhvz.models.*;
@@ -62,7 +63,8 @@ public class AppRunner implements ApplicationRunner {
         Player killer = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user));
         Player victim = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user1));
         killController.add(1L, new KillPostDTO(killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
-//        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
+        squadController.add(1L, new SquadPostDTO(1L, "Makaronerna"));
+        //        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
 //        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
 //        playerController.add(1L, playerAdminDTO);
 //        Player newPlayer = new Player(2L, PlayerState.NO_SQUAD, false, false, "HT8", user ,game);

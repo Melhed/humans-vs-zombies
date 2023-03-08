@@ -1,6 +1,7 @@
 package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.dtos.SquadDTO;
+import com.example.backendhvz.dtos.SquadPostDTO;
 import com.example.backendhvz.mappers.SquadMapper;
 import com.example.backendhvz.models.Squad;
 import com.example.backendhvz.services.squad.SquadService;
@@ -32,11 +33,9 @@ public class SquadController {
     }
 
     @PostMapping // POST /game/<game_id>/squad
-    public ResponseEntity<SquadDTO> add(@PathVariable Long gameId, @RequestBody SquadDTO squadDTO) {
-        if(squadDTO == null) return ResponseEntity.badRequest().build();
-        squadDTO.setGameId(gameId);
-        Squad squad = squadMapper.squadDtoToSquad(squadDTO);
-        return ResponseEntity.ok(squadMapper.squadToSquadDto(squadService.add(squad)));
+    public ResponseEntity<SquadDTO> add(@PathVariable Long gameId, @RequestBody SquadPostDTO squadPostDTO) {
+        if(squadPostDTO == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(squadMapper.squadToSquadDto(squadService.addSquad(gameId, squadPostDTO)));
     }
 
     @PutMapping("{squadId}") // PUT /game/<game_id>/squad/<squad_id>

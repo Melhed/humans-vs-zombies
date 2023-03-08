@@ -16,7 +16,7 @@ public class SquadMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "squad_member_id")
     private Long id;
-    private String rank;
+    private boolean isRankingMember;
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     private Game game;
