@@ -8,6 +8,6 @@ import java.util.Collection;
 public interface MissionService extends CRUDService<Mission, Long> {
 
     Collection<Mission> findMissionsByGameId(Long gameId);
-    Mission findMissionByIdAndGameId(Long gameId, Long missionId);
+    Mission findMissionByIdAndGameId(Long gameId, Long missionId, Long playerId);
 
 }

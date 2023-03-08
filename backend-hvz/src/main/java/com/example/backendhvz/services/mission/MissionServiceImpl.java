@@ -1,8 +1,9 @@
 package com.example.backendhvz.services.mission;
 
 import com.example.backendhvz.models.Mission;
+import com.example.backendhvz.models.Player;
 import com.example.backendhvz.repositories.MissionRepository;
-import org.springframework.http.ResponseEntity;
+import com.example.backendhvz.repositories.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -11,9 +12,11 @@ import java.util.Collection;
 public class MissionServiceImpl implements MissionService{
 
     private final MissionRepository missionRepository;
+    private final PlayerRepository playerRepository;
 
-    public MissionServiceImpl(MissionRepository missionRepository) {
+    public MissionServiceImpl(MissionRepository missionRepository, PlayerRepository playerRepository) {
         this.missionRepository = missionRepository;
+        this.playerRepository = playerRepository;
     }
 
     @Override
@@ -58,8 +61,13 @@ public class MissionServiceImpl implements MissionService{
     }
 
     @Override
-    public Mission findMissionByIdAndGameId(Long gameId, Long missionId) {
-        if(gameId == null || missionId == null) return null;
-        return missionRepository.findMissionByIdAndGame_Id(gameId, missionId).get();
+    public Mission findMissionByIdAndGameId(Long gameId, Long missionId, Long playerId) {
+        Player player = playerRepository.findById(playerId).get();
+        Mission mission = findById(missionId);
+        if(mission == null || player == null) return null;
+        if(player.isHuman() && mission.isHumanVisible()) return mission;
+        if(!player.isHuman() && mission.isZombieVisible()) return mission;
+
+        return null;
     }
 }

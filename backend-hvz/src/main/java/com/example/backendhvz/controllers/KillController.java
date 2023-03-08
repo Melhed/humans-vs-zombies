@@ -1,6 +1,7 @@
 package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.dtos.KillDTO;
+import com.example.backendhvz.dtos.KillPostDTO;
 import com.example.backendhvz.mappers.KillMapper;
 import com.example.backendhvz.models.Kill;
 import com.example.backendhvz.services.kill.KillService;
@@ -11,7 +12,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
-@RequestMapping(path = "api/v1/kill")
+@RequestMapping(path = "api/v1/game/{gameId}/kill")
 public class KillController {
     private final KillService killService;
     private final KillMapper killMapper;
@@ -22,38 +23,38 @@ public class KillController {
     }
 
     @GetMapping("{killId}")
-    public ResponseEntity<KillDTO> findById(@PathVariable Long killId) {
+    public ResponseEntity<KillDTO> findById(@PathVariable Long gameId, @PathVariable Long killId) {
         return ResponseEntity.ok(killMapper.killToKillDto(killService.findById(killId)));
     }
 
     @GetMapping
-    public ResponseEntity<Collection<KillDTO>> findAll() {
-        return ResponseEntity.ok(killMapper.killsToKillDtos(killService.findAll()));
+    public ResponseEntity<Collection<KillDTO>> findAll(@PathVariable Long gameId) {
+        return ResponseEntity.ok(killMapper.killsToKillDtos(killService.findAll(gameId)));
     }
 
     @PostMapping
-    public ResponseEntity<KillDTO> add(@RequestBody KillDTO killDTO) {
-        Kill kill = killMapper.killDtoToKill(killDTO);
-        killService.add(kill);
+    public ResponseEntity<KillDTO> add(@PathVariable Long gameId, @RequestBody KillPostDTO killPostDTO) {
+        Kill kill = killService.addKill(gameId, killPostDTO);
+        if (kill == null) return ResponseEntity.badRequest().build();
         URI location = URI.create("/" + kill.getId());
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("{killId}")
-    public ResponseEntity update(@RequestBody KillDTO killDTO, @PathVariable Long killId) {
-        if (killId != killDTO.getId()) return ResponseEntity.badRequest().build();
+    public ResponseEntity update(@RequestBody KillDTO killDTO, @PathVariable Long gameId, @PathVariable Long killId) {
+        if (killId != killDTO.getId() || gameId != killDTO.getGame()) return ResponseEntity.badRequest().build();
         Kill kill = killMapper.killDtoToKill(killDTO);
         return ResponseEntity.ok(killService.update(kill));
     }
 
     @DeleteMapping("{killId}")
-    public ResponseEntity deleteById(@PathVariable Long killId) {
+    public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long killId) {
         killService.deleteById(killId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public ResponseEntity delete(@RequestBody KillDTO killDTO) {
+    public ResponseEntity delete(@PathVariable Long gameId, @RequestBody KillDTO killDTO) {
         killService.delete(killMapper.killDtoToKill(killDTO));
         return ResponseEntity.noContent().build();
     }

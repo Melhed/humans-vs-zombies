@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class SquadCheckIn {
     @Column(name = "squad_check_in_id")
     private Long id;
     @Column(nullable = false)
-    private Date timestamp;
+    private Timestamp timestamp;
     @Column(nullable = false)
     private String lat;
     @Column(nullable = false)

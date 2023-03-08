@@ -1,8 +1,12 @@
 package com.example.backendhvz.controllers;
 
+import com.example.backendhvz.dtos.ChatDTO;
 import com.example.backendhvz.dtos.GameDTO;
+import com.example.backendhvz.mappers.ChatMapper;
 import com.example.backendhvz.mappers.GameMapper;
+import com.example.backendhvz.models.Chat;
 import com.example.backendhvz.models.Game;
+import com.example.backendhvz.services.chat.ChatService;
 import com.example.backendhvz.services.game.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +20,14 @@ public class GameController {
 
     private final GameService gameService;
     private final GameMapper gameMapper;
+    private final ChatService chatService;
+    private final ChatMapper chatMapper;
 
-    public GameController(GameService gameService, GameMapper gameMapper) {
+    public GameController(GameService gameService, GameMapper gameMapper, ChatService chatService, ChatMapper chatMapper) {
         this.gameService = gameService;
         this.gameMapper = gameMapper;
+        this.chatService = chatService;
+        this.chatMapper = chatMapper;
     }
 
     @GetMapping("{gameId}")
@@ -57,5 +65,16 @@ public class GameController {
     public ResponseEntity delete(@RequestBody GameDTO gameDTO) {
         gameService.delete(gameMapper.gameDtoToGame(gameDTO));
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("{gameId}/chat")
+    public ResponseEntity<Collection<ChatDTO>> getFactionChat(@PathVariable Long gameId, @RequestBody boolean playerIsHuman) {
+        return ResponseEntity.ok(chatMapper.chatsToChatDtos(chatService.findAllByGameId(gameId, playerIsHuman)));
+    }
+    @PostMapping("{gameId}/chat")
+    public ResponseEntity addChat(@PathVariable long gameId, @RequestBody ChatDTO chatDTO) {
+        chatDTO.setGameId(gameId);
+        Chat chat = chatMapper.chatDtoToChat(chatDTO);
+        return ResponseEntity.ok(chatMapper.chatToChatDto(chatService.add(chat)));
     }
 }
