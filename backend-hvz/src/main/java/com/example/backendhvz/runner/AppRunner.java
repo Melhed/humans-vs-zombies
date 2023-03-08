@@ -4,6 +4,7 @@ import com.example.backendhvz.controllers.GameController;
 import com.example.backendhvz.controllers.KillController;
 import com.example.backendhvz.controllers.PlayerController;
 import com.example.backendhvz.controllers.SquadController;
+import com.example.backendhvz.dtos.ChatDTO;
 import com.example.backendhvz.dtos.GameDTO;
 import com.example.backendhvz.dtos.KillPostDTO;
 import com.example.backendhvz.dtos.SquadPostDTO;
@@ -19,6 +20,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Component
 public class AppRunner implements ApplicationRunner {
@@ -65,6 +67,8 @@ public class AppRunner implements ApplicationRunner {
         killController.add(1L, new KillPostDTO(killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
         squadController.add(1L, new SquadPostDTO(1L, "Makaronerna"));
         squadController.join(1L, 1L, 2L);
+        gameController.addChat(1L, new ChatDTO(null, "hello", new Timestamp(System.currentTimeMillis()), false, true, 1L, 1L, 1L));
+        System.out.println(squadController.findAllSquadChats(1L, 1L, 1L));
         //        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
 //        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
 //        playerController.add(1L, playerAdminDTO);

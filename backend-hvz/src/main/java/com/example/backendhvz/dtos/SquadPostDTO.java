@@ -8,5 +8,4 @@ import lombok.Data;
 public class SquadPostDTO {
     private Long playerId;
     private String squadName;
-
 }

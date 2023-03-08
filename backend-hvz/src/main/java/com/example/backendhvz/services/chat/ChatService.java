@@ -10,4 +10,5 @@ public interface ChatService extends CRUDService<Chat, Long> {
     Chat findChatByIdAndGameId(Long gameId, Long chatId);
 
     Collection<Chat> findAllByGameId(Long gameId, boolean playerIsHuman);
+    Collection<Chat> findAllBySquadIdAndFaction(Long squadId, Long playerId);
 }

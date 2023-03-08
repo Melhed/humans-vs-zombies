@@ -19,4 +19,10 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("select c from Chat c where c.game.id = ?1 and c.isZombieGlobal = true")
     Optional<Collection<Chat>> findAllByGameIdAndZombieGlobal(Long gameId);
     Optional<Chat> findChatByIdAndGameId(Long gameId, Long chatId);
+    @Modifying
+    @Query("select c from Chat c where c.squad.id = ?1 and c.isHumanGlobal = true")
+    Optional<Collection<Chat>> findAllBySquad_IdAndHumanGlobal(Long squadId);
+    @Modifying
+    @Query("select c from Chat c where c.squad.id = ?1 and c.isZombieGlobal = true")
+    Optional<Collection<Chat>> findAllBySquad_IdAndZombieGlobal(Long squadId);
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -25,7 +26,7 @@ public class Chat {
     @Column(name = "is_zombie_global", nullable = false)
     private boolean isZombieGlobal;
     @Column(nullable = false)
-    private Date timestamp;
+    private Timestamp timestamp;
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     private Game game;

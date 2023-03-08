@@ -1,17 +1,19 @@
 package com.example.backendhvz.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
+@AllArgsConstructor
 public class ChatDTO {
-    private long id;
+    private Long id;
     private String message;
-    private Date timestamp;
+    private Timestamp timestamp;
     private boolean isHumanGlobal;
     private boolean isZombieGlobal;
-    private long playerId;
-    private long gameId;
-    private long squadId;
+    private Long playerId;
+    private Long gameId;
+    private Long squadId;
 }

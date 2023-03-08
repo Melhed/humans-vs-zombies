@@ -43,7 +43,7 @@ public class PlayerServiceImpl implements PlayerService {
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setGame(gameId);
         playerDTO.setUser(hvZUserDTO.getId());
-        playerDTO.isHuman();
+        playerDTO.setHuman(true);
         String biteCode = generateBiteCode();
         while (playerRepository.existsPlayerByBiteCodeAndGame_Id(biteCode, gameId).get())
             biteCode = generateBiteCode();

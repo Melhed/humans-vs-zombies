@@ -1,7 +1,11 @@
 package com.example.backendhvz.services.chat;
 
 import com.example.backendhvz.models.Chat;
+import com.example.backendhvz.models.Player;
+import com.example.backendhvz.models.Squad;
 import com.example.backendhvz.repositories.ChatRepository;
+import com.example.backendhvz.repositories.PlayerRepository;
+import com.example.backendhvz.repositories.SquadRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -10,9 +14,13 @@ import java.util.Collection;
 public class ChatServiceImpl implements ChatService {
 
     private  final ChatRepository chatRepository;
+    private final PlayerRepository playerRepository;
+    private final SquadRepository squadRepository;
 
-    public ChatServiceImpl(ChatRepository chatRepository) {
+    public ChatServiceImpl(ChatRepository chatRepository, PlayerRepository playerRepository, SquadRepository squadRepository) {
         this.chatRepository = chatRepository;
+        this.playerRepository = playerRepository;
+        this.squadRepository = squadRepository;
     }
 
     @Override
@@ -35,6 +43,17 @@ public class ChatServiceImpl implements ChatService {
         System.out.println(playerIsHuman);
         if (playerIsHuman) return chatRepository.findAllByGameIdAndHumanGlobal(gameId).get();
         return chatRepository.findAllByGameIdAndZombieGlobal(gameId).get();
+    }
+
+    @Override
+    public Collection<Chat> findAllBySquadIdAndFaction(Long squadId, Long playerId) {
+        Player player = playerRepository.findById(playerId).get();
+        Squad squad = squadRepository.findById(squadId).get();
+        if(squad == null || player == null || player.isHuman() != squad.isHuman()) return null;
+        if(squad.isHuman()) {
+            return chatRepository.findAllBySquad_IdAndHumanGlobal(squadId).get();
+        }
+        return chatRepository.findAllBySquad_IdAndZombieGlobal(squadId).get();
     }
 
     @Override

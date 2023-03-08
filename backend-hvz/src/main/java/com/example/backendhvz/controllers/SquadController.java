@@ -1,11 +1,16 @@
 package com.example.backendhvz.controllers;
 
+import com.example.backendhvz.dtos.ChatDTO;
 import com.example.backendhvz.dtos.SquadDTO;
 import com.example.backendhvz.dtos.SquadMemberDTO;
 import com.example.backendhvz.dtos.SquadPostDTO;
+import com.example.backendhvz.mappers.ChatMapper;
 import com.example.backendhvz.mappers.SquadMapper;
 import com.example.backendhvz.mappers.SquadMemberMapper;
 import com.example.backendhvz.models.Squad;
+import com.example.backendhvz.repositories.ChatRepository;
+import com.example.backendhvz.repositories.PlayerRepository;
+import com.example.backendhvz.services.chat.ChatService;
 import com.example.backendhvz.services.squad.SquadService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +23,17 @@ public class SquadController {
     private final SquadService squadService;
     private final SquadMapper squadMapper;
     private final SquadMemberMapper squadMemberMapper;
+    private final ChatService chatService;
+    private final ChatMapper chatMapper;
+    private final PlayerRepository playerRepository;
 
-    public SquadController(SquadService squadService, SquadMapper squadMapper, SquadMemberMapper squadMemberMapper) {
+    public SquadController(SquadService squadService, SquadMapper squadMapper, SquadMemberMapper squadMemberMapper, ChatService chatService, ChatMapper chatMapper, PlayerRepository playerRepository) {
         this.squadService = squadService;
         this.squadMapper = squadMapper;
         this.squadMemberMapper = squadMemberMapper;
+        this.chatService = chatService;
+        this.chatMapper = chatMapper;
+        this.playerRepository = playerRepository;
     }
 
     @GetMapping("{squadId}") // GET /game/<game_id>/squad/<squad_id>
@@ -33,6 +44,11 @@ public class SquadController {
     @GetMapping // GET /game/<game_id>/squad
     public ResponseEntity<Collection<SquadDTO>> findAllSquadsByGameId(@PathVariable Long gameId) {
         return ResponseEntity.ok(squadMapper.squadsToSquadDtos(squadService.findSquadsByGameId(gameId)));
+    }
+
+    @GetMapping("{squadId}/chat")
+    public ResponseEntity<Collection<ChatDTO>> findAllSquadChats(@PathVariable Long gameId, @PathVariable Long squadId, @RequestBody Long playerId) {
+        return ResponseEntity.ok(chatMapper.chatsToChatDtos(chatService.findAllBySquadIdAndFaction(squadId, playerId)));
     }
 
     @PostMapping // POST /game/<game_id>/squad
