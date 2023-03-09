@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class KillPostDTO {
+    private Long killPosterId;
     private Long killerId;
     private String biteCode;
     private String story;
