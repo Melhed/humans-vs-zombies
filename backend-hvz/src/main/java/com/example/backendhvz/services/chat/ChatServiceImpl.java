@@ -1,5 +1,6 @@
 package com.example.backendhvz.services.chat;
 
+import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.models.Chat;
 import com.example.backendhvz.models.Player;
 import com.example.backendhvz.models.Squad;
@@ -52,10 +53,13 @@ public class ChatServiceImpl implements ChatService {
     public Collection<Chat> findAllBySquadIdAndFaction(Long squadId, Long playerId) {
         Player player = playerRepository.findById(playerId).get();
         Squad squad = squadRepository.findById(squadId).get();
-        if(squad == null || player == null || player.isHuman() != squad.isHuman()) return null;
-        if(squad.isHuman()) {
+        if (    squad == null || player == null ||
+                player.isHuman() != squad.isHuman() ||
+                player.getState() == PlayerState.NO_SQUAD ||
+                player.getState() == PlayerState.UNREGISTERED)
+            return null;
+        if (squad.isHuman())
             return chatRepository.findAllBySquad_IdAndHumanGlobal(squadId).get();
-        }
         return chatRepository.findAllBySquad_IdAndZombieGlobal(squadId).get();
     }
     @Override
@@ -65,6 +69,11 @@ public class ChatServiceImpl implements ChatService {
     }
     @Override
     public Chat addSquadChat(Chat chat) {
+        if (    chat == null ||
+                chat.getPlayer() == null ||
+                chat.getPlayer().getState() == PlayerState.NO_SQUAD ||
+                chat.getPlayer().getState() == PlayerState.UNREGISTERED)
+            return null;
         return chatRepository.save(chat);
     }
 

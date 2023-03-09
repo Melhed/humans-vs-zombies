@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public interface SquadService extends CRUDService<Squad, Long> {
     Collection<Squad> findSquadsByGameId(Long gameId);
-    Squad findSquadByIdAndGameId(Long gameId, Long squadId);
+    Squad findSquadByIdAndGameId(Long gameId, Long squadId, Long playerId);
 
     Squad addSquad(Long gameId, SquadPostDTO squadPostDTO);
 
@@ -18,4 +18,8 @@ public interface SquadService extends CRUDService<Squad, Long> {
 
     SquadCheckIn addCheckIn(Long squadId, SquadCheckIn checkIn);
     Collection<SquadCheckIn> getSquadCheckIns(Long squadId, Long playerId);
+
+    Squad updateSquad(Squad squad, Long playerId);
+
+    void deleteSquad(Squad squad, Long playerId);
 }
