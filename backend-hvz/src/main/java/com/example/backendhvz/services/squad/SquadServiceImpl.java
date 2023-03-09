@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SquadServiceImpl implements SquadService{
@@ -91,8 +92,8 @@ public class SquadServiceImpl implements SquadService{
         Player player = playerRepository.findById(playerId).get();
         Squad squad = findById(squadId);
         if (gameId == null || squad == null || player == null || player.getState() != PlayerState.SQUAD_MEMBER) return null;
-        Collection<SquadMemberDetailsDTO> squadMembers = squadMemberMapper.squadMembersToSquadMemberDetailsDtos(squadMemberRepository.findAllBySquadId(squadId).get());
-        return new SquadDetailsDTO(squadId, squad.getName(), squad.isHuman(), (Set<SquadMemberDetailsDTO>) squadMembers);
+        Set<SquadMemberDetailsDTO> squadMembers = squadMemberMapper.squadMembersToSquadMemberDetailsDtos(squadMemberRepository.findAllBySquadId(squadId).get()).stream().collect(Collectors.toSet());
+        return new SquadDetailsDTO(squadId, squad.getName(), squad.isHuman(), squadMembers);
     }
 
     @Override

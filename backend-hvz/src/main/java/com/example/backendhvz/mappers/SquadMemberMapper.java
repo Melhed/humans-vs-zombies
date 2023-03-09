@@ -16,6 +16,8 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public abstract class SquadMemberMapper {
@@ -46,11 +48,18 @@ public abstract class SquadMemberMapper {
     @Mapping(target = "squad", source = "squadId", qualifiedByName = "squadIdToSquad")
     public abstract Collection<SquadMember> squadMemberDtosToSquads(Collection<SquadMemberDTO> squadMemberDTO);
 
-    @Mapping(target = "gameId", source = "game.id")
-    @Mapping(target = "playerId", source = "player.id")
-    @Mapping(target = "playerIsHuman", source = "player.isHuman")
-    @Mapping(target = "squadId", source = "squad.id")
-    public abstract Collection<SquadMemberDetailsDTO> squadMembersToSquadMemberDetailsDtos(Collection<SquadMember> squadMembers);
+    public Set<SquadMemberDetailsDTO> squadMembersToSquadMemberDetailsDtos(Collection<SquadMember> squadMembers) {
+        return squadMembers.stream().map(squadMember ->
+                    new SquadMemberDetailsDTO(
+                            squadMember.getId(),
+                            squadMember.isRankingMember(),
+                            squadMember.getGame().getId(),
+                            squadMember.getSquad().getId(),
+                            squadMember.getPlayer().isHuman(),
+                            squadMember.getPlayer().getId())
+
+        ).collect(Collectors.toSet());
+    }
 
     @Named("playerIdToPlayer")
     Player mapPlayerIdToPlayer(Long playerId) {

@@ -13,6 +13,7 @@ import com.example.backendhvz.repositories.ChatRepository;
 import com.example.backendhvz.repositories.UserRepository;
 import com.example.backendhvz.services.player.PlayerService;
 
+import com.example.backendhvz.services.squad.SquadServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -36,8 +37,9 @@ public class AppRunner implements ApplicationRunner {
     private final SquadMapper squadMapper;
     private final HvZUserMapper hvZUserMapper;
     private final KillController killController;
+    private final SquadServiceImpl squadServiceImpl;
 
-    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper, KillController killController) {
+    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper, KillController killController, SquadServiceImpl squadServiceImpl) {
         this.gameController = gameController;
         this.gameMapper = gameMapper;
         this.playerController = playerController;
@@ -51,6 +53,7 @@ public class AppRunner implements ApplicationRunner {
         this.hvZUserMapper = hvZUserMapper;
         this.killController = killController;
 
+        this.squadServiceImpl = squadServiceImpl;
     }
 
     @Override
@@ -77,6 +80,7 @@ public class AppRunner implements ApplicationRunner {
         squadController.addSquadCheckIn(1L, 1L, new CheckInDTO(null, new Timestamp(System.currentTimeMillis()), "30", "30", 1L, 1L, 1L));
         System.out.println(squadController.findAllSquadCheckIns(1L, 1L, 2L));
         System.out.println(playerController.findAll(1L, 1L));
+        System.out.println("++++" + squadServiceImpl.findDetailedSquad(1L, 1L, 2L));
         //        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
 //        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
 //        playerController.add(1L, playerAdminDTO);

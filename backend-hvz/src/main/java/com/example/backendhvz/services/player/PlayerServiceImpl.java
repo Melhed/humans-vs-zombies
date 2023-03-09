@@ -70,7 +70,8 @@ public class PlayerServiceImpl implements PlayerService {
         while (playerRepository.existsPlayerByBiteCodeAndGame_Id(biteCode, gameId))
             biteCode = generateBiteCode();
         playerDTO.setBiteCode(biteCode);
-        playerDTO.setState(PlayerState.UNREGISTERED);
+        // TODO: This should be PlayerState.UNREGISTERED (?) later
+        playerDTO.setState(PlayerState.NO_SQUAD);
         Player player = playerMapper.playerDtoToPlayer(playerDTO);
         return playerRepository.save(player);
     }
