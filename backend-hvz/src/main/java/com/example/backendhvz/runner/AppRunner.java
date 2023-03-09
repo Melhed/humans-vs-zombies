@@ -6,6 +6,7 @@ import com.example.backendhvz.controllers.PlayerController;
 import com.example.backendhvz.controllers.SquadController;
 import com.example.backendhvz.dtos.*;
 import com.example.backendhvz.enums.GameState;
+import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.mappers.*;
 import com.example.backendhvz.models.*;
 import com.example.backendhvz.repositories.ChatRepository;
@@ -64,7 +65,10 @@ public class AppRunner implements ApplicationRunner {
         userRepository.save(user1);
         Player killer = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user));
         Player victim = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user1));
-        killController.add(1L, new KillPostDTO(killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
+        Player p = playerService.findById(1L);
+        p.setState(PlayerState.ADMINISTRATOR);
+        playerService.update(p);
+        killController.add(1L, new KillPostDTO(victim.getId(), killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
         squadController.add(1L, new SquadPostDTO(1L, "Makaronerna"));
         squadController.add(1L, new SquadPostDTO(2L, "Döda Makaronerna"));
         squadController.join(1L, 1L, 2L);
@@ -72,6 +76,7 @@ public class AppRunner implements ApplicationRunner {
         System.out.println(squadController.findAllSquadChats(1L, 1L, 2L));
         squadController.addSquadCheckIn(1L, 1L, new CheckInDTO(null, new Timestamp(System.currentTimeMillis()), "30", "30", 1L, 1L, 1L));
         System.out.println(squadController.findAllSquadCheckIns(1L, 1L, 2L));
+        System.out.println(playerController.findAll(1L, 1L));
         //        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
 //        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
 //        playerController.add(1L, playerAdminDTO);

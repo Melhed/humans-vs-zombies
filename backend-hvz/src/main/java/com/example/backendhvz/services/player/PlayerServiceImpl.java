@@ -9,8 +9,8 @@ import com.example.backendhvz.repositories.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Random;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -39,13 +39,35 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Object findByIdAndPlayerState(Long gameId, Long playerId, Long requestingPlayerId) {
+        Player requestingPlayer = findById(requestingPlayerId);
+        Player player = findById(playerId);
+        if(requestingPlayer.getGame().getId() != gameId || player.getGame().getId() != gameId) return null;
+        if(requestingPlayer.getState() == PlayerState.ADMINISTRATOR) {
+            return playerMapper.playerToPlayerAdminDto(player);
+        }
+        return playerMapper.playerToPlayerDto(player);
+    }
+
+    @Override
+    public Collection<Object> findAllByPlayerState(Long gameId, Long requestingPlayerId) {
+        Player requestingPlayer = findById(requestingPlayerId);
+        if(requestingPlayer.getGame().getId() != gameId) return null;
+
+        if(requestingPlayer.getState() == PlayerState.ADMINISTRATOR) {
+            return new ArrayList<>(playerMapper.playersToPlayerAdminDtos(findAll(gameId)));
+        }
+        return new ArrayList<>(playerMapper.playersToPlayerDtos(findAll(gameId)));
+    }
+
+    @Override
     public Player addNewPlayer(Long gameId, HvZUserDTO hvZUserDTO) {
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setGame(gameId);
         playerDTO.setUser(hvZUserDTO.getId());
         playerDTO.setHuman(true);
         String biteCode = generateBiteCode();
-        while (playerRepository.existsPlayerByBiteCodeAndGame_Id(biteCode, gameId).get())
+        while (playerRepository.existsPlayerByBiteCodeAndGame_Id(biteCode, gameId))
             biteCode = generateBiteCode();
         playerDTO.setBiteCode(biteCode);
         playerDTO.setState(PlayerState.UNREGISTERED);
@@ -75,7 +97,22 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Player updatePlayer(Player player, Long updatingPlayerId) {
+        Player updatingPlayer = findById(updatingPlayerId);
+        if(updatingPlayer.getState() != PlayerState.ADMINISTRATOR) return null;
+        return playerRepository.save(player);
+    }
+
+    @Override
     public void deleteById(Long playerId) {
+        playerRepository.deleteById(playerId);
+    }
+
+    // TODO: This should be cascading
+    @Override
+    public void deletePlayerById(Long playerId, Long deletingPlayerId) {
+        Player deletingPlayer = findById(deletingPlayerId);
+        if(deletingPlayer.getState() != PlayerState.ADMINISTRATOR) return;
         playerRepository.deleteById(playerId);
     }
 

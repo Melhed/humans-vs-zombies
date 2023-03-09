@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/game/{gameId}/player")
@@ -27,13 +28,13 @@ public class PlayerController {
 
 
     @GetMapping("{playerId}")
-    public ResponseEntity<PlayerDTO> findById(@PathVariable Long gameId, @PathVariable Long playerId) {
-        return ResponseEntity.ok(playerMapper.playerToPlayerDto(playerService.findById(playerId)));
+    public ResponseEntity<Object> findById(@PathVariable Long gameId, @PathVariable Long playerId, @RequestBody Long requestingPlayerId) {
+        return ResponseEntity.ok(playerService.findByIdAndPlayerState(gameId, playerId, requestingPlayerId));
     }
 
     @GetMapping
-    public ResponseEntity<Collection<PlayerDTO>> findAll(@PathVariable Long gameId) {
-        return ResponseEntity.ok(playerMapper.playersToPlayerDtos(playerService.findAll(gameId)));
+    public ResponseEntity<Collection<Object>> findAll(@PathVariable Long gameId, @RequestBody Long requestingPlayerId) {
+        return ResponseEntity.ok(playerService.findAllByPlayerState(gameId, requestingPlayerId));
     }
 
     // TODO: Generate bite_code & merge the following two together

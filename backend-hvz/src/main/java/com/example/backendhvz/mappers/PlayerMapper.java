@@ -30,12 +30,21 @@ public abstract class PlayerMapper {
     @Mapping(target = "user", source = "user.id")
     @Mapping(target = "game", source = "game.id")
     public abstract PlayerAdminDTO playerToPlayerAdminDto(Player player);
+    @Mapping(target = "user", source = "user.id")
+    @Mapping(target = "game", source = "game.id")
+    public abstract Collection<PlayerAdminDTO> playersToPlayerAdminDtos(Collection<Player> players);
     @Mapping(target = "user", source = "user", qualifiedByName = "userIdToUser")
     @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
     public abstract Player playerDtoToPlayer(PlayerDTO playerDTO);
     @Mapping(target = "user", source = "user", qualifiedByName = "userIdToUser")
     @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
+    public abstract Collection<Player> playerDtosToPlayers(Collection<Player> players);
+    @Mapping(target = "user", source = "user", qualifiedByName = "userIdToUser")
+    @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
     public abstract Player playerAdminDtoToPlayer(PlayerAdminDTO playerAdminDTO);
+    @Mapping(target = "user", source = "user", qualifiedByName = "userIdToUser")
+    @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
+    public abstract Collection<Player> playerAdminDtosToPlayers(Collection<PlayerAdminDTO> playerAdminDtos);
 
     @Named("gameIdToGame")
     Game mapGameIdToGame(Long gameId) {
