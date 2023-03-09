@@ -41,10 +41,8 @@ public class KillController {
     }
 
     @PutMapping("{killId}")
-    public ResponseEntity update(@RequestBody KillDTO killDTO, @PathVariable Long gameId, @PathVariable Long killId) {
-        if (killId != killDTO.getId() || gameId != killDTO.getGame()) return ResponseEntity.badRequest().build();
-        Kill kill = killMapper.killDtoToKill(killDTO);
-        return ResponseEntity.ok(killService.update(kill));
+    public ResponseEntity update(@PathVariable Long gameId, @PathVariable Long killId, @RequestBody Long updatingPlayerId, @RequestBody KillDTO killDTO) {
+        return ResponseEntity.ok(killService.updateKill(gameId, killId, updatingPlayerId, killDTO));
     }
 
     @DeleteMapping("{killId}")
