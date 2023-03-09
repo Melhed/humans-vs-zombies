@@ -55,7 +55,7 @@ public class PlayerController {
 
     @PutMapping("{playerId}")
     public ResponseEntity update(@RequestBody PlayerAdminDTO playerDTO, @PathVariable Long gameId, @PathVariable Long playerId) {
-        if (playerId != playerDTO.getId() || gameId != playerDTO.getGame()) return ResponseEntity.badRequest().build();
+        if (gameId != playerDTO.getGame()) return ResponseEntity.badRequest().build();
         Player player = playerMapper.playerAdminDtoToPlayer(playerDTO);
         return ResponseEntity.ok(playerService.update(player));
     }

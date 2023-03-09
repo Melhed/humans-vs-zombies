@@ -52,6 +52,7 @@ public class KillServiceImpl implements KillService {
     public Kill addKill(Long gameId, KillPostDTO killPostDTO) {
         Game game = gameRepository.findById(gameId).get();
         Player killPoster = playerRepository.findById(killPostDTO.getKillPosterId()).get();
+        // Hmm verkar inte funka?
         if(killPoster.getState() != PlayerState.ADMINISTRATOR
                 || !playerRepository.existsPlayerByBiteCodeAndGame_Id(killPostDTO.getBiteCode(), gameId)
         ) return null;
