@@ -29,11 +29,7 @@ public class Mission {
     private Date startTime;
     @Column(name = "end_time")
     private Date endTime;
-
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     private Game game;
-
-
-
 }
