@@ -16,6 +16,8 @@ public interface SquadService extends CRUDService<Squad, Long> {
 
     SquadMember joinSquad(Long gameId, Long squadId, Long playerId);
 
+    void leaveSquad(Long gameId, Long playerId);
+
     SquadCheckIn addCheckIn(Long squadId, SquadCheckIn checkIn);
     Collection<SquadCheckIn> getSquadCheckIns(Long squadId, Long playerId);
 

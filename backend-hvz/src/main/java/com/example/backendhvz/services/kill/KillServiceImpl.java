@@ -58,9 +58,8 @@ public class KillServiceImpl implements KillService {
 
         Player killer = playerRepository.findById(killPostDTO.getKillerId()).get();
         Player victim = playerRepository.findByBiteCode(killPostDTO.getBiteCode()).get();
+
         victim.setHuman(false);
-        
-        squadMemberRepository.deleteByPlayerId(victim.getId());
         playerRepository.save(victim);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Kill kill = new Kill(null, timestamp, killPostDTO.getStory(), killPostDTO.getLat(), killPostDTO.getLng(), game, killer, victim);
