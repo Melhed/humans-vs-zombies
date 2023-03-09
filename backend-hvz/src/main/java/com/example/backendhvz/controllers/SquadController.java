@@ -36,8 +36,8 @@ public class SquadController {
     }
     // Only squad member
     @GetMapping("{squadId}") // GET /game/<game_id>/squad/<squad_id>
-    public ResponseEntity<SquadDTO> findSquadByIdAndGameId(@PathVariable Long gameId, @PathVariable Long squadId, @PathVariable Long playerId) {
-        return ResponseEntity.ok(squadMapper.squadToSquadDto(squadService.findSquadByIdAndGameId(gameId, squadId, playerId)));
+    public ResponseEntity<SquadDetailsDTO> findDetailedSquad(@PathVariable Long gameId, @PathVariable Long squadId, @PathVariable Long playerId) {
+        return ResponseEntity.ok(squadService.findDetailedSquad(gameId, squadId, playerId));
     }
     // everyone?, unsure should we have a different DTO for this one
     @GetMapping // GET /game/<game_id>/squad

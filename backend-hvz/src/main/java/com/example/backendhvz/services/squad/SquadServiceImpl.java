@@ -1,12 +1,16 @@
 package com.example.backendhvz.services.squad;
 
+import com.example.backendhvz.dtos.SquadDetailsDTO;
+import com.example.backendhvz.dtos.SquadMemberDTO;
 import com.example.backendhvz.dtos.SquadPostDTO;
 import com.example.backendhvz.enums.PlayerState;
+import com.example.backendhvz.mappers.SquadMemberMapper;
 import com.example.backendhvz.models.*;
 import com.example.backendhvz.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Set;
 
 @Service
 public class SquadServiceImpl implements SquadService{
@@ -15,13 +19,15 @@ public class SquadServiceImpl implements SquadService{
     private final GameRepository gameRepository;
     private final SquadMemberRepository squadMemberRepository;
     private final SquadCheckInRepository squadCheckInRepository;
+    private final SquadMemberMapper squadMemberMapper;
 
-    public SquadServiceImpl(SquadRepository squadRepository, PlayerRepository playerRepository, GameRepository gameRepository, SquadMemberRepository squadMemberRepository, SquadCheckInRepository squadCheckInRepository) {
+    public SquadServiceImpl(SquadRepository squadRepository, PlayerRepository playerRepository, GameRepository gameRepository, SquadMemberRepository squadMemberRepository, SquadCheckInRepository squadCheckInRepository, SquadMemberMapper squadMemberMapper) {
         this.squadRepository = squadRepository;
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.squadMemberRepository = squadMemberRepository;
         this.squadCheckInRepository = squadCheckInRepository;
+        this.squadMemberMapper = squadMemberMapper;
     }
 
     @Override
@@ -80,10 +86,12 @@ public class SquadServiceImpl implements SquadService{
     }
 
     @Override
-    public Squad findSquadByIdAndGameId(Long gameId, Long squadId, Long playerId) {
+    public SquadDetailsDTO findDetailedSquad(Long gameId, Long squadId, Long playerId) {
         Player player = playerRepository.findById(playerId).get();
-        if (gameId == null || squadId == null || player == null || player.getState() != PlayerState.SQUAD_MEMBER) return null;
-        return squadRepository.findSquadByIdAndGame_Id(gameId, squadId).get();
+        Squad squad = findById(squadId);
+        if (gameId == null || squad == null || player == null || player.getState() != PlayerState.SQUAD_MEMBER) return null;
+        Collection<SquadMemberDTO> squadMembers = squadMemberMapper.squadMembersToSquadMemberDtos(squadMemberRepository.findAllBySquadId(squadId).get());
+        return new SquadDetailsDTO(squadId, squad.getName(), squad.isHuman(), (Set<SquadMemberDTO>) squadMembers);
     }
 
     @Override
