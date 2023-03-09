@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -98,7 +97,22 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Player updatePlayer(Player player, Long updatingPlayerId) {
+        Player updatingPlayer = findById(updatingPlayerId);
+        if(updatingPlayer.getState() != PlayerState.ADMINISTRATOR) return null;
+        return playerRepository.save(player);
+    }
+
+    @Override
     public void deleteById(Long playerId) {
+        playerRepository.deleteById(playerId);
+    }
+
+    // TODO: This should be cascading
+    @Override
+    public void deletePlayerById(Long playerId, Long deletingPlayerId) {
+        Player deletingPlayer = findById(deletingPlayerId);
+        if(deletingPlayer.getState() != PlayerState.ADMINISTRATOR) return;
         playerRepository.deleteById(playerId);
     }
 

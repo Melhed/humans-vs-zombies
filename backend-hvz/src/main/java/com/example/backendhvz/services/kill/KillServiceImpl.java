@@ -90,6 +90,13 @@ public class KillServiceImpl implements KillService {
     }
 
     @Override
+    public void deleteKillById(Long killId, Long deletingPlayerId) {
+        Player deletingPlayer = playerRepository.findById(deletingPlayerId).get();
+        if(deletingPlayer.getState() != PlayerState.ADMINISTRATOR) return;
+        killRepository.deleteById(killId);
+    }
+
+    @Override
     public void delete(Kill kill) {
         killRepository.delete(kill);
     }
