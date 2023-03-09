@@ -1,5 +1,6 @@
 package com.example.backendhvz.services.mission;
 
+import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.models.Mission;
 import com.example.backendhvz.models.Player;
 import com.example.backendhvz.repositories.MissionRepository;
@@ -37,9 +38,23 @@ public class MissionServiceImpl implements MissionService{
     }
 
     @Override
+    public Mission addMission(Mission mission, Long playerId) {
+        Player player = playerRepository.findById(playerId).get();
+        if (player == null || player.getState() != PlayerState.ADMINISTRATOR) return null;
+        return add(mission);
+    }
+
+    @Override
     public Mission update(Mission mission) {
         if(mission == null) return null;
         return missionRepository.save(mission);
+    }
+
+    @Override
+    public Mission updateMission(Mission mission, Long playerId) {
+        Player player = playerRepository.findById(playerId).get();
+        if (player == null || player.getState() != PlayerState.ADMINISTRATOR) return null;
+        return update(mission);
     }
 
     @Override
@@ -53,11 +68,19 @@ public class MissionServiceImpl implements MissionService{
         if(mission == null) return;
         missionRepository.delete(mission);
     }
+    @Override
+    public void deleteMissionById(Long missionId, Long playerId) {
+        Player player = playerRepository.findById(playerId).get();
+        if (player == null || player.getState() != PlayerState.ADMINISTRATOR) return;
+        deleteById(missionId);
+    }
 
     @Override
-    public Collection<Mission> findMissionsByGameId(Long gameId) {
-        if(gameId == null) return null;
-        return missionRepository.findMissionsByGame_Id(gameId).get();
+    public Collection<Mission> findMissionsByGameId(Long gameId, Long playerId) {
+        Player player = playerRepository.findById(playerId).get();
+        if(player == null) return null;
+        if (player.isHuman()) return missionRepository.findMissionsByGameIdAndHumanVisible(gameId).get();
+        return missionRepository.findMissionsByGameIdAndZombieVisible(gameId).get();
     }
 
     @Override
@@ -67,7 +90,6 @@ public class MissionServiceImpl implements MissionService{
         if(mission == null || player == null) return null;
         if(player.isHuman() && mission.isHumanVisible()) return mission;
         if(!player.isHuman() && mission.isZombieVisible()) return mission;
-
         return null;
     }
 }
