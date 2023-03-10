@@ -40,9 +40,9 @@ public class KillController {
             Collection<Kill> kills = killService.findAll(gameId);
             return ResponseEntity.ok(killMapper.killsToKillDtos(kills));
         } catch (BadRequestException e) {
-            return exceptionHandler.handleBadRequest(e, null);
+            return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
-            return exceptionHandler.handleNotFound(e, null);
+            return exceptionHandler.handleNotFound(e);
         }
     }
 
