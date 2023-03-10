@@ -2,11 +2,16 @@ package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.dtos.KillDTO;
 import com.example.backendhvz.dtos.KillPostDTO;
+import com.example.backendhvz.exceptions.BadRequestException;
+import com.example.backendhvz.exceptions.NotFoundException;
+import com.example.backendhvz.exceptions.RestResponseEntityExceptionHandler;
 import com.example.backendhvz.mappers.KillMapper;
 import com.example.backendhvz.models.Kill;
 import com.example.backendhvz.services.kill.KillService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
 
 import java.net.URI;
 import java.util.Collection;
@@ -16,10 +21,12 @@ import java.util.Collection;
 public class KillController {
     private final KillService killService;
     private final KillMapper killMapper;
+    private final RestResponseEntityExceptionHandler exceptionHandler;
 
-    public KillController(KillService killService, KillMapper killMapper) {
+    public KillController(KillService killService, KillMapper killMapper, RestResponseEntityExceptionHandler exceptionHandler) {
         this.killService = killService;
         this.killMapper = killMapper;
+        this.exceptionHandler = exceptionHandler;
     }
 
     @GetMapping("{killId}")
@@ -28,8 +35,15 @@ public class KillController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<KillDTO>> findAll(@PathVariable Long gameId) {
-        return ResponseEntity.ok(killMapper.killsToKillDtos(killService.findAll(gameId)));
+    public ResponseEntity<Object> findAll(@PathVariable Long gameId) {
+        try{
+            Collection<Kill> kills = killService.findAll(gameId);
+            return ResponseEntity.ok(killMapper.killsToKillDtos(kills));
+        } catch (BadRequestException e) {
+            return exceptionHandler.handleBadRequest(e, null);
+        } catch (NotFoundException e) {
+            return exceptionHandler.handleNotFound(e, null);
+        }
     }
 
     @PostMapping

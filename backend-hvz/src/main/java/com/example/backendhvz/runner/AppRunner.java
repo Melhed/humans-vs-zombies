@@ -69,11 +69,13 @@ public class AppRunner implements ApplicationRunner {
         Player[] players = createPlayers(users, games[2]);
         Squad squad = createSquad(games[2], players[3]);
         joinSquad(games[2], squad, players[4]);
-        kill(games[2], players[2], players[3]);
+        kill(games[2], players[0], players[3]);
         addChat(games[2], players[3]);
         addSquadChat(games[2], players[3], squad);
         addSquadCheckIn(games[2], squad, players[3]);
         printPlayers(players);
+        System.out.println(killController.findAll(null));
+        System.out.println(killController.findAll(5L));
     }
 
     private void addSquadCheckIn(Game game, Squad squad, Player player) {
@@ -149,5 +151,7 @@ public class AppRunner implements ApplicationRunner {
             System.out.println("Game ID: " + players[i].getGame().getId());
         }
     }
+
+
 }
 

@@ -3,6 +3,8 @@ package com.example.backendhvz.services.kill;
 import com.example.backendhvz.dtos.KillDTO;
 import com.example.backendhvz.dtos.KillPostDTO;
 import com.example.backendhvz.enums.PlayerState;
+import com.example.backendhvz.exceptions.BadRequestException;
+import com.example.backendhvz.exceptions.NotFoundException;
 import com.example.backendhvz.mappers.KillMapper;
 import com.example.backendhvz.models.Game;
 import com.example.backendhvz.models.Kill;
@@ -102,7 +104,9 @@ public class KillServiceImpl implements KillService {
     }
 
     @Override
-    public Collection<Kill> findAll(Long gameId) {
+    public Collection<Kill> findAll(Long gameId) throws BadRequestException, NotFoundException {
+        if (gameId == null) throw new BadRequestException("game id cannot be null");
+        if (!gameRepository.existsById(gameId)) throw new NotFoundException("No game found with game id " + gameId);
         return killRepository.findAllByGameId(gameId).get();
     }
 
