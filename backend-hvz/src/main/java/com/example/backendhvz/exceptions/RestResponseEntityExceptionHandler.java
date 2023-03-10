@@ -13,32 +13,32 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = {BadRequestException.class})
     public ResponseEntity<Object> handleBadRequest(
-            BadRequestException ex, WebRequest req) {
+            BadRequestException ex) {
         String bodyOfResponse = ex.getMessage();
         return handleExceptionInternal(ex,
                 bodyOfResponse,
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST,
-                req);
+                null);
     }
 
     @ExceptionHandler(value = {NotFoundException.class})
     public ResponseEntity<Object> handleNotFound(
-            NotFoundException ex, WebRequest req) {
+            NotFoundException ex) {
         String bodyOfResponse = ex.getMessage();
         return handleExceptionInternal(ex,
                 bodyOfResponse,
                 new HttpHeaders(),
                 HttpStatus.NOT_FOUND,
-                req);
+                null);
     }
     @ExceptionHandler(value = {ForbiddenException.class})
     public ResponseEntity<Object> handleForbidden(
-            BadRequestException ex, WebRequest req) {
+            ForbiddenException ex) {
         String bodyOfResponse = ex.getMessage();
         return handleExceptionInternal(ex,
                 bodyOfResponse,
                 new HttpHeaders(),
-                HttpStatus.FORBIDDEN, req);
+                HttpStatus.FORBIDDEN, null);
     }
 }

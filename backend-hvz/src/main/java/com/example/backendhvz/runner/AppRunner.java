@@ -64,8 +64,8 @@ public class AppRunner implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        Game[] games = createGames();
         HvZUser[] users = createUsers();
+        Game[] games = createGames();
         Player[] players = createPlayers(users, games[2]);
         Squad squad = createSquad(games[2], players[3]);
         joinSquad(games[2], squad, players[4]);
