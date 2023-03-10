@@ -2,6 +2,7 @@ package com.example.backendhvz.services.squad;
 
 import com.example.backendhvz.dtos.SquadDetailsDTO;
 import com.example.backendhvz.dtos.SquadMemberDTO;
+import com.example.backendhvz.dtos.SquadMemberDetailsDTO;
 import com.example.backendhvz.dtos.SquadPostDTO;
 import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.mappers.SquadMemberMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SquadServiceImpl implements SquadService{
@@ -90,8 +92,8 @@ public class SquadServiceImpl implements SquadService{
         Player player = playerRepository.findById(playerId).get();
         Squad squad = findById(squadId);
         if (gameId == null || squad == null || player == null || player.getState() != PlayerState.SQUAD_MEMBER) return null;
-        Collection<SquadMemberDTO> squadMembers = squadMemberMapper.squadMembersToSquadMemberDtos(squadMemberRepository.findAllBySquadId(squadId).get());
-        return new SquadDetailsDTO(squadId, squad.getName(), squad.isHuman(), (Set<SquadMemberDTO>) squadMembers);
+        Set<SquadMemberDetailsDTO> squadMembers = squadMemberMapper.squadMembersToSquadMemberDetailsDtos(squadMemberRepository.findAllBySquadId(squadId).get()).stream().collect(Collectors.toSet());
+        return new SquadDetailsDTO(squadId, squad.getName(), squad.isHuman(), squadMembers);
     }
 
     @Override
@@ -99,8 +101,12 @@ public class SquadServiceImpl implements SquadService{
         Player player = playerRepository.findById(squadPostDTO.getPlayerId()).get();
         Game game = gameRepository.findById(gameId).get();
         if (player == null || game == null || player.getState() != PlayerState.NO_SQUAD) return null;
+
+        player.setState(PlayerState.SQUAD_MEMBER);
         Squad squad = new Squad(null, squadPostDTO.getSquadName(), player.isHuman(), game);
         SquadMember squadMember = new SquadMember(null, true, game, squad, player);
+
+        playerRepository.save(player);
         squadMemberRepository.save(squadMember);
         return add(squad);
     }
@@ -112,8 +118,19 @@ public class SquadServiceImpl implements SquadService{
         Player player = playerRepository.findById(playerId).get();
         if (game == null || squad == null || squad.isHuman() != player.isHuman() || player.getState() != PlayerState.NO_SQUAD)
             return null;
+        player.setState(PlayerState.SQUAD_MEMBER);
         SquadMember squadMember = new SquadMember(null, false, game, squad, player);
+        playerRepository.save(player);
         return squadMemberRepository.save(squadMember);
+    }
+
+    @Override
+    public void leaveSquad(Long gameId, Long playerId) {
+        Player player = playerRepository.findById(playerId).get();
+        if(gameId != player.getGame().getId() || player.getState() != PlayerState.SQUAD_MEMBER) return;
+        player.setState(PlayerState.NO_SQUAD);
+        squadMemberRepository.deleteByPlayerId(playerId);
+        playerRepository.save(player);
     }
 
     @Override

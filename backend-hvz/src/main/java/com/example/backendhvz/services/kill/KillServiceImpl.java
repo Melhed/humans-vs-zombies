@@ -52,15 +52,15 @@ public class KillServiceImpl implements KillService {
     public Kill addKill(Long gameId, KillPostDTO killPostDTO) {
         Game game = gameRepository.findById(gameId).get();
         Player killPoster = playerRepository.findById(killPostDTO.getKillPosterId()).get();
+        // Hmm verkar inte funka?
         if(killPoster.getState() != PlayerState.ADMINISTRATOR
                 || !playerRepository.existsPlayerByBiteCodeAndGame_Id(killPostDTO.getBiteCode(), gameId)
         ) return null;
 
         Player killer = playerRepository.findById(killPostDTO.getKillerId()).get();
         Player victim = playerRepository.findByBiteCode(killPostDTO.getBiteCode()).get();
+
         victim.setHuman(false);
-        
-        squadMemberRepository.deleteByPlayerId(victim.getId());
         playerRepository.save(victim);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Kill kill = new Kill(null, timestamp, killPostDTO.getStory(), killPostDTO.getLat(), killPostDTO.getLng(), game, killer, victim);

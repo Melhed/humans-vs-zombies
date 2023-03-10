@@ -1,28 +1,35 @@
 package com.example.backendhvz.mappers;
 
 import com.example.backendhvz.dtos.SquadMemberDTO;
+import com.example.backendhvz.dtos.SquadMemberDetailsDTO;
 import com.example.backendhvz.models.Game;
 import com.example.backendhvz.models.Player;
 import com.example.backendhvz.models.Squad;
 import com.example.backendhvz.models.SquadMember;
-import com.example.backendhvz.services.game.GameService;
-import com.example.backendhvz.services.player.PlayerService;
-import com.example.backendhvz.services.squad.SquadService;
+import com.example.backendhvz.repositories.GameRepository;
+import com.example.backendhvz.repositories.PlayerRepository;
+import com.example.backendhvz.repositories.SquadMemberRepository;
+import com.example.backendhvz.repositories.SquadRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public abstract class SquadMemberMapper {
     @Autowired
-    private PlayerService playerService;
+    private PlayerRepository playerRepository;
     @Autowired
-    private GameService gameService;
+    private GameRepository gameRepository;
     @Autowired
-    private SquadService squadService;
+    private SquadRepository squadRepository;
+
+    @Autowired
+    private SquadMemberRepository squadMemberRepository;
 
     @Mapping(target = "gameId", source = "game.id")
     @Mapping(target = "playerId", source = "player.id")
@@ -41,20 +48,33 @@ public abstract class SquadMemberMapper {
     @Mapping(target = "squad", source = "squadId", qualifiedByName = "squadIdToSquad")
     public abstract Collection<SquadMember> squadMemberDtosToSquads(Collection<SquadMemberDTO> squadMemberDTO);
 
+    public Set<SquadMemberDetailsDTO> squadMembersToSquadMemberDetailsDtos(Collection<SquadMember> squadMembers) {
+        return squadMembers.stream().map(squadMember ->
+                    new SquadMemberDetailsDTO(
+                            squadMember.getId(),
+                            squadMember.isRankingMember(),
+                            squadMember.getGame().getId(),
+                            squadMember.getSquad().getId(),
+                            squadMember.getPlayer().isHuman(),
+                            squadMember.getPlayer().getId())
+
+        ).collect(Collectors.toSet());
+    }
+
     @Named("playerIdToPlayer")
     Player mapPlayerIdToPlayer(Long playerId) {
         if (playerId == null) return null;
-        return playerService.findById(playerId);
+        return playerRepository.findById(playerId).get();
     }
 
     @Named("gameIdToGame")
     Game mapGameIdToGame(Long gameId) {
         if(gameId == null) return null;
-        return gameService.findById(gameId);
+        return gameRepository.findById(gameId).get();
     }
     @Named("squadIdToSquad")
     Squad mapSquadIdToSquad(Long squadId) {
         if(squadId == null) return null;
-        return squadService.findById(squadId);
+        return squadRepository.findById(squadId).get();
     }
 }

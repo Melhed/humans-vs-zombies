@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -27,9 +27,9 @@ public class Game {
     private GameState state;
 
     @Column(name = "start_time", nullable = false)
-    private Date startTime;
+    private Timestamp startTime;
     @Column(name = "end_time")
-    private Date endTime;
+    private Timestamp endTime;
 
     @Column(name = "nw_lat", nullable = false)
     private String nwLat;

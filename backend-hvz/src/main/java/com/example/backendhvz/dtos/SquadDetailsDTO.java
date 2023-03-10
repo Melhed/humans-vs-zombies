@@ -11,5 +11,5 @@ public class SquadDetailsDTO {
     private Long id;
     private String name;
     private boolean isHuman;
-    private Set<SquadMemberDTO> squadMembers;
+    private Set<SquadMemberDetailsDTO> squadMembers;
 }

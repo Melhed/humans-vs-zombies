@@ -78,7 +78,7 @@ public class MissionServiceImpl implements MissionService{
     @Override
     public Collection<Mission> findMissionsByGameId(Long gameId, Long playerId) {
         Player player = playerRepository.findById(playerId).get();
-        if(player == null) return null;
+        if(player == null || gameId != player.getGame().getId()) return null;
         if (player.isHuman()) return missionRepository.findMissionsByGameIdAndHumanVisible(gameId).get();
         return missionRepository.findMissionsByGameIdAndZombieVisible(gameId).get();
     }
@@ -87,7 +87,7 @@ public class MissionServiceImpl implements MissionService{
     public Mission findMissionByIdAndGameId(Long gameId, Long missionId, Long playerId) {
         Player player = playerRepository.findById(playerId).get();
         Mission mission = findById(missionId);
-        if(mission == null || player == null) return null;
+        if(mission == null || player == null || gameId != player.getGame().getId()) return null;
         if(player.isHuman() && mission.isHumanVisible()) return mission;
         if(!player.isHuman() && mission.isZombieVisible()) return mission;
         return null;

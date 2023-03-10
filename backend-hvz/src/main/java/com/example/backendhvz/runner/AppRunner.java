@@ -10,15 +10,16 @@ import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.mappers.*;
 import com.example.backendhvz.models.*;
 import com.example.backendhvz.repositories.ChatRepository;
+import com.example.backendhvz.repositories.PlayerRepository;
 import com.example.backendhvz.repositories.UserRepository;
 import com.example.backendhvz.services.player.PlayerService;
 
+import com.example.backendhvz.services.squad.SquadServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Component
@@ -26,23 +27,30 @@ public class AppRunner implements ApplicationRunner {
     private final GameController gameController;
     private final GameMapper gameMapper;
 
+    private final UserRepository userRepository;
+    private final HvZUserMapper hvZUserMapper;
+
     private final PlayerController playerController;
     private final PlayerMapper playerMapper;
     private final PlayerService playerService;
-    private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
+
     private final ChatRepository chatRepository;
     private final ChatMapper chatMapper;
+
     private final SquadController squadController;
     private final SquadMapper squadMapper;
-    private final HvZUserMapper hvZUserMapper;
+    private final SquadServiceImpl squadServiceImpl;
+
     private final KillController killController;
 
-    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper, KillController killController) {
+    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, PlayerRepository playerRepository, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper, KillController killController, SquadServiceImpl squadServiceImpl) {
         this.gameController = gameController;
         this.gameMapper = gameMapper;
         this.playerController = playerController;
         this.playerMapper = playerMapper;
         this.playerService = playerService;
+        this.playerRepository = playerRepository;
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
         this.chatMapper = chatMapper;
@@ -50,47 +58,96 @@ public class AppRunner implements ApplicationRunner {
         this.squadMapper = squadMapper;
         this.hvZUserMapper = hvZUserMapper;
         this.killController = killController;
-
+        this.squadServiceImpl = squadServiceImpl;
     }
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        Game game = new Game(1L, "GAME1", GameState.COMPLETE, new Date(1,1,1), new Date(2,2,2), "1", "2", "3", "4");
-        GameDTO gameDTO = gameMapper.gameToGameDto(game);
-        gameController.add(gameDTO);
-        HvZUser user = new HvZUser(null, "Billy", "Woods");
-        HvZUser user1 = new HvZUser(null, "Filly", "Foods");
-        userRepository.save(user);
-        userRepository.save(user1);
-        Player killer = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user));
-        Player victim = playerService.addNewPlayer(1L, hvZUserMapper.hvZUserToHvZUserDto(user1));
-        Player p = playerService.findById(1L);
-        p.setState(PlayerState.ADMINISTRATOR);
-        playerService.update(p);
-        killController.add(1L, new KillPostDTO(victim.getId(), killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
-        squadController.add(1L, new SquadPostDTO(1L, "Makaronerna"));
-        squadController.add(1L, new SquadPostDTO(2L, "Döda Makaronerna"));
-        squadController.join(1L, 1L, 2L);
-        gameController.addChat(1L, new ChatDTO(null, "hello", new Timestamp(System.currentTimeMillis()), false, true, 1L, 1L, 1L));
-        System.out.println(squadController.findAllSquadChats(1L, 1L, 2L));
-        squadController.addSquadCheckIn(1L, 1L, new CheckInDTO(null, new Timestamp(System.currentTimeMillis()), "30", "30", 1L, 1L, 1L));
-        System.out.println(squadController.findAllSquadCheckIns(1L, 1L, 2L));
-        System.out.println(playerController.findAll(1L, 1L));
-        //        Player player = new Player(1L, PlayerState.ADMINISTRATOR, true, false, "HOT", user ,game);
-//        PlayerAdminDTO playerAdminDTO = playerMapper.playerToPlayerAdminDto(player);
-//        playerController.add(1L, playerAdminDTO);
-//        Player newPlayer = new Player(2L, PlayerState.NO_SQUAD, false, false, "HT8", user ,game);
-//
-//        playerController.update(playerMapper.playerToPlayerAdminDto(newPlayer),1L,1L);
-//        Squad squad = new Squad(1L, "squad", true, game);
-//        squadController.add(1L, squadMapper.squadToSquadDto(squad));
-//        Chat chat = new Chat(1L, "HELO", false, true, new Date(2020,02,15), null, player, squad);
-//
-//
-//        gameController.addChat(1L, chatMapper.chatToChatDto(chat));
-//        System.out.println(gameController.getFactionChat(1L, true));
+        Game[] games = createGames();
+        HvZUser[] users = createUsers();
+        Player[] players = createPlayers(users, games[2]);
+        Squad squad = createSquad(games[2], players[3]);
+        joinSquad(games[2], squad, players[4]);
+        kill(games[2], players[2], players[3]);
+        addChat(games[2], players[3]);
+        addSquadChat(games[2], players[3], squad);
+        addSquadCheckIn(games[2], squad, players[3]);
+        printPlayers(players);
+    }
 
+    private void addSquadCheckIn(Game game, Squad squad, Player player) {
+        squadController.addSquadCheckIn(game.getId(), squad.getId(), new CheckInDTO(null, new Timestamp(System.currentTimeMillis()), "12", "13", game.getId(), squad.getId(), 1L));
+    }
+
+    private void addChat(Game game, Player player) {
+        gameController.addChat(game.getId(), new ChatDTO(null, "Help", new Timestamp(System.currentTimeMillis()), true, true, player.getId(), game.getId(), null));
+    }
+
+    private void addSquadChat(Game game, Player player, Squad squad) {
+        squadController.addSquadChat(game.getId(), squad.getId(), new ChatDTO(null, "Here comes the sun", new Timestamp(System.currentTimeMillis()), true, false, player.getId(), game.getId(), squad.getId()));
+    }
+
+    private void joinSquad(Game game, Squad squad, Player player) {
+        squadController.join(game.getId(), squad.getId(), player.getId());
+    }
+
+    private Squad createSquad(Game game, Player player) {
+        return squadMapper.squadDtoToSquad(squadController.add(game.getId(), new SquadPostDTO(player.getId(), "The Beatles")).getBody());
+    }
+
+    private void kill(Game game, Player killer, Player victim) {
+        killController.add(game.getId(), new KillPostDTO(killer.getId(), killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
+    }
+
+    private Game[] createGames() {
+        Game[] games = new Game[3];
+        games[0] = new Game(1L, "Complete game", GameState.COMPLETE, new Timestamp(System.currentTimeMillis()-300), new Timestamp(System.currentTimeMillis()-200), "1", "2", "3", "4");
+        games[1] = new Game(2L, "Active game", GameState.IN_PROGRESS, new Timestamp(System.currentTimeMillis()-300), new Timestamp(System.currentTimeMillis()+200), "1", "2", "3", "4");
+        games[2] = new Game(3L, "Registration game", GameState.REGISTRATION, new Timestamp(System.currentTimeMillis()+300), new Timestamp(System.currentTimeMillis()+800), "1", "2", "3", "4");
+
+        for (int i = 0; i < games.length; i++)
+            gameController.add(gameMapper.gameToGameDto(games[i]));
+        return games;
+    }
+    private HvZUser[] createUsers() {
+        HvZUser[] users = new HvZUser[5];
+        users[0] = new HvZUser(null, "Billy", "Woods");
+        users[1] = new HvZUser(null, "Paul", "McCartney");
+        users[2] = new HvZUser(null, "Ringo", "Starr");
+        users[3] = new HvZUser(null, "John", "Lennon");
+        users[4] = new HvZUser(null, "George", "Harrison");
+
+        for (int i = 0; i < users.length; i++)
+            userRepository.save(users[i]);
+        return users;
+    }
+
+    private Player[] createPlayers(HvZUser[] users, Game game) {
+        Player[] players = new Player[5];
+
+        players[0] = new Player(null, PlayerState.ADMINISTRATOR, true, false, "000", users[0], game);
+        playerRepository.save(players[0]);
+
+        for (int i = 1; i < users.length; i++) {
+            HvZUserDTO user = hvZUserMapper.hvZUserToHvZUserDto(users[i]);
+            players[i] = playerService.addNewPlayer(game.getId(),user);
+        }
+
+        playerController.update(new PlayerAdminDTO(players[1].getId(), PlayerState.NO_SQUAD, false, true, players[1].getBiteCode(), users[1].getId(), game.getId()), game.getId(), players[0].getId());
+        return players;
+    }
+
+    private void printPlayers(Player[] players) {
+        for (int i = 0; i < players.length; i++) {
+            System.out.println("ID: " + players[i].getId());
+            System.out.println("Player state: " + players[i].getState());
+            System.out.println("is human: " + players[i].isHuman());
+            System.out.println("is patient zero: " + players[i].isPatientZero());
+            System.out.println("Bite code: " + players[i].getBiteCode());
+            System.out.println("User ID: " + players[i].getUser().getId());
+            System.out.println("Game ID: " + players[i].getGame().getId());
+        }
     }
 }
 
