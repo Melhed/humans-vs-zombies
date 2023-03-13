@@ -7,6 +7,7 @@ import com.example.backendhvz.exceptions.NotFoundException;
 import com.example.backendhvz.models.Chat;
 import com.example.backendhvz.models.Player;
 import com.example.backendhvz.models.Squad;
+
 import com.example.backendhvz.repositories.*;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +33,14 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat findById(Long chatId) {
+        if(!chatRepository.existsById(chatId)) throw new NotFoundException("Chat with ID " + chatId + " not found.");
         return chatRepository.findById(chatId).get();
     }
 
     @Override
     public Chat findChatByIdAndGameId(Long gameId, Long chatId) {
+        if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
+        if(!chatRepository.existsById(chatId)) throw new NotFoundException("Chat with ID " + chatId + " not found.");
         return chatRepository.findChatByIdAndGameId(gameId, chatId).get();
     }
 
@@ -51,6 +55,7 @@ public class ChatServiceImpl implements ChatService {
     }
     @Override
     public Collection<Chat> findAllByGameId(Long gameId, boolean playerIsHuman) {
+        if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
         if (playerIsHuman) return chatRepository.findAllByGameIdAndHumanGlobal(gameId).get();
         return chatRepository.findAllByGameIdAndZombieGlobal(gameId).get();
     }
@@ -80,6 +85,14 @@ public class ChatServiceImpl implements ChatService {
         chat.setSquad(null);
         return chatRepository.save(chat);
     }
+
+    @Override
+    public Chat addGameChat(Long gameId, Chat chat) {
+        if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
+        chat.setSquad(null);
+        return chatRepository.save(chat);
+    }
+
     @Override
     public Chat addSquadChat(Chat chat, Long gameId, Long playerId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);

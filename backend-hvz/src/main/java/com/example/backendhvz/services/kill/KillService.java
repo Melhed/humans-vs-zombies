@@ -12,7 +12,7 @@ public interface KillService extends CRUDService<Kill, Long> {
 
     Kill updateKill(Long gameId, Long killId, Long updatingPlayerId, KillDTO killDTO);
 
-    void deleteKillById(Long killId, Long deletingPlayerId);
+    void deleteKillById(Long gameId, Long killId, Long deletingPlayerId);
 
     Collection<Kill> findAll(Long gameId) throws BadRequestException;
 
