@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<HvZUser> findAll() {
-        return null;
+        return userRepository.findAll();
     }
 
     @Override
@@ -31,16 +31,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public HvZUser update(HvZUser user) {
-        return null;
+        return userRepository.save(user);
     }
 
     @Override
     public void deleteById(Long userId) {
-
+        userRepository.deleteById(userId);
     }
 
     @Override
     public void delete(HvZUser user) {
-
+        userRepository.delete(user);
     }
 }
