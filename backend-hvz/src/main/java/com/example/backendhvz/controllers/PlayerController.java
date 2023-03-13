@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/game/{gameId}/player")
 public class PlayerController {
     private final PlayerService playerService;
