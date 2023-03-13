@@ -15,6 +15,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/game/{gameId}/mission")
 public class MissionController {
     private final MissionService missionService;

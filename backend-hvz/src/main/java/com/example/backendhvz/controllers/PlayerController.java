@@ -17,6 +17,7 @@ import java.net.URI;
 import java.util.Objects;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/game/{gameId}/player")
 public class PlayerController {
     private final PlayerService playerService;

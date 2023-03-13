@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/game/{gameId}/squad")
 public class SquadController {
     private final SquadService squadService;

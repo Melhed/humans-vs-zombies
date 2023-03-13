@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/game")
 public class GameController {
 

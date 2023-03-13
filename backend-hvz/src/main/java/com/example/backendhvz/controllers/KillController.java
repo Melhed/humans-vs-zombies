@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/game/{gameId}/kill")
 public class KillController {
     private final KillService killService;
