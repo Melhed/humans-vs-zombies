@@ -95,7 +95,7 @@ public class AppRunner implements ApplicationRunner {
     }
 
     private Squad createSquad(Game game, Player player) {
-        return squadMapper.squadDtoToSquad(squadController.add(game.getId(), new SquadPostDTO(player.getId(), "The Beatles")).getBody());
+        return squadMapper.squadDtoToSquad((SquadDTO) squadController.add(game.getId(), new SquadPostDTO(player.getId(), "The Beatles")).getBody());
     }
 
     private void kill(Game game, Player killer, Player victim) {
@@ -114,11 +114,11 @@ public class AppRunner implements ApplicationRunner {
     }
     private HvZUser[] createUsers() {
         HvZUser[] users = new HvZUser[5];
-        users[0] = new HvZUser(null, "Billy", "Woods");
-        users[1] = new HvZUser(null, "Paul", "McCartney");
-        users[2] = new HvZUser(null, "Ringo", "Starr");
-        users[3] = new HvZUser(null, "John", "Lennon");
-        users[4] = new HvZUser(null, "George", "Harrison");
+        users[0] = new HvZUser("1", "Billy", "Woods");
+        users[1] = new HvZUser("2", "Paul", "McCartney");
+        users[2] = new HvZUser("3", "Ringo", "Starr");
+        users[3] = new HvZUser("4", "John", "Lennon");
+        users[4] = new HvZUser("5", "George", "Harrison");
 
         for (int i = 0; i < users.length; i++)
             userRepository.save(users[i]);

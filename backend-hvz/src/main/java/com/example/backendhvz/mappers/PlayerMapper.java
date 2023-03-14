@@ -52,7 +52,7 @@ public abstract class PlayerMapper {
         return gameService.findById(gameId);
     }
     @Named("userIdToUser")
-    HvZUser mapUserIdToUser(Long userId) {
+    HvZUser mapUserIdToUser(String userId) {
         if (userId == null) return null;
         return userService.findById(userId);
     }
