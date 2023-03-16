@@ -13,9 +13,8 @@ import lombok.Setter;
 @Entity
 public class HvZUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hvzuser_id")
-    private Long id;
+    private String id;
 
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;

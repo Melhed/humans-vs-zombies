@@ -64,17 +64,19 @@ public class AppRunner implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        Game[] games = createGames();
         HvZUser[] users = createUsers();
+        Game[] games = createGames();
         Player[] players = createPlayers(users, games[2]);
         Squad squad = createSquad(games[2], players[3]);
         Squad squad2 = createSquad(games[2], players[3]);
         joinSquad(games[2], squad, players[4]);
-        kill(games[2], players[2], players[3]);
+        kill(games[2], players[0], players[3]);
         addChat(games[2], players[3]);
         addSquadChat(games[2], players[3], squad);
         addSquadCheckIn(games[2], squad, players[3]);
         printPlayers(players);
+        System.out.println(playerController.findById(games[0].getId(), players[1].getId(), players[1].getId()));
+        System.out.println(squadController.findAllSquadChats(games[2].getId(), squad.getId(), players[2].getId()));
     }
 
     private void addSquadCheckIn(Game game, Squad squad, Player player) {
@@ -94,7 +96,7 @@ public class AppRunner implements ApplicationRunner {
     }
 
     private Squad createSquad(Game game, Player player) {
-        return squadMapper.squadDtoToSquad(squadController.add(game.getId(), new SquadPostDTO(player.getId(), "The Beatles")).getBody());
+        return squadMapper.squadDtoToSquad((SquadDTO) squadController.add(game.getId(), new SquadPostDTO(player.getId(), "The Beatles")).getBody());
     }
 
     private void kill(Game game, Player killer, Player victim) {
@@ -113,11 +115,11 @@ public class AppRunner implements ApplicationRunner {
     }
     private HvZUser[] createUsers() {
         HvZUser[] users = new HvZUser[5];
-        users[0] = new HvZUser(null, "Billy", "Woods");
-        users[1] = new HvZUser(null, "Paul", "McCartney");
-        users[2] = new HvZUser(null, "Ringo", "Starr");
-        users[3] = new HvZUser(null, "John", "Lennon");
-        users[4] = new HvZUser(null, "George", "Harrison");
+        users[0] = new HvZUser("1", "Billy", "Woods");
+        users[1] = new HvZUser("2", "Paul", "McCartney");
+        users[2] = new HvZUser("3", "Ringo", "Starr");
+        users[3] = new HvZUser("4", "John", "Lennon");
+        users[4] = new HvZUser("5", "George", "Harrison");
 
         for (int i = 0; i < users.length; i++)
             userRepository.save(users[i]);
@@ -150,5 +152,7 @@ public class AppRunner implements ApplicationRunner {
             System.out.println("Game ID: " + players[i].getGame().getId());
         }
     }
+
+
 }
 
