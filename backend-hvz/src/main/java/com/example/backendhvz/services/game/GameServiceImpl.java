@@ -1,5 +1,6 @@
 package com.example.backendhvz.services.game;
 
+import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.exceptions.ForbiddenException;
 import com.example.backendhvz.exceptions.NotFoundException;
@@ -38,13 +39,19 @@ public class GameServiceImpl implements GameService {
         return gameRepository.save(game);
     }
 
+
 //    @Override
 //    public Game addGame(Game game, Long creatingPlayerId) {
-//        if(!playerRepository.existsById(creatingPlayerId)) throw new NotFoundException("Player with ID " + creatingPlayerId + " not found.");
 //        Player creatingPlayer = playerRepository.findById(creatingPlayerId).get();
-//        if(creatingPlayer.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administrators can create a new game.");
+//        if(creatingPlayer.getState() != PlayerState.ADMINISTRATOR) return null;
 //        return gameRepository.save(game);
 //    }
+
+    @Override
+    public Game addNewGame(Game game) {
+        game.setState(GameState.REGISTRATION);
+        return gameRepository.save(game);
+    }
 
     @Override
     public Game update(Game game) {

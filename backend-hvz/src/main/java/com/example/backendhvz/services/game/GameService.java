@@ -9,4 +9,6 @@ public interface GameService extends CRUDService<Game, Long> {
     Game updateGame(Long updatingPlayerId, Game game);
 
     void deleteGameById(Long gameId, Long deletingPlayerId);
+
+    Game addNewGame(Game game);
 }

@@ -2,6 +2,7 @@ package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.dtos.ChatDTO;
 import com.example.backendhvz.dtos.GameDTO;
+import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.exceptions.BadRequestException;
 import com.example.backendhvz.exceptions.ForbiddenException;
 import com.example.backendhvz.exceptions.NotFoundException;
@@ -71,6 +72,14 @@ public class GameController {
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);
         }
+    }
+
+    @PostMapping("/add-new-game")
+    public ResponseEntity<GameDTO> addNewGame(@RequestBody GameDTO gameDTO) {
+        Game game = gameMapper.gameDtoToGame(gameDTO);
+        gameService.addNewGame(game);
+        URI location = URI.create("/" + game.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("{gameId}")
