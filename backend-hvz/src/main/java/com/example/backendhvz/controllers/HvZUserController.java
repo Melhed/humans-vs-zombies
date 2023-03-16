@@ -8,6 +8,7 @@ import com.example.backendhvz.mappers.HvZUserMapper;
 import com.example.backendhvz.models.HvZUser;
 import com.example.backendhvz.services.user.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;

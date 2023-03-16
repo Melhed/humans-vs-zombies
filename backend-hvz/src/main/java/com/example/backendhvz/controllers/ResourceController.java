@@ -16,13 +16,6 @@ public class ResourceController {
         return ResponseEntity.ok("public");
     }
 
-    @GetMapping("protected")
-    public ResponseEntity getProtected() {
-        /*ResponseMessage message = new ResponseMessage();
-        message.setMessage("Protected resources");*/
-        return ResponseEntity.ok("protected");
-    }
-
     @GetMapping("authenticated")
     public ResponseEntity getAuthenticated() {
         return ResponseEntity.ok("authenticated");
