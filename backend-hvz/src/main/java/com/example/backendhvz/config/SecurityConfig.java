@@ -1,11 +1,15 @@
 package com.example.backendhvz.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -15,14 +19,20 @@ public class SecurityConfig {
                 .sessionManagement().disable()
                 // Disable CSRF -- not necessary when there are no sessions
                 .csrf().disable()
+                .anonymous().and()
                 // Enable security for http requests
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/**").permitAll()
-                        // All endpoints are protected
+                        .requestMatchers("/api/v1/resources/public").permitAll()
+                        // All other endpoints are protected
                         .anyRequest().authenticated()
                 )
+                .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer()
                 .jwt();
         return http.build();
+    }
+
+    public void configure(WebSecurity web) {
+        web.ignoring().requestMatchers("/api/v1/resources", "/api/v1/user");
     }
 }
