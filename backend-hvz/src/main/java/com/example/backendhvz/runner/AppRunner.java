@@ -67,8 +67,7 @@ public class AppRunner implements ApplicationRunner {
         HvZUser[] users = createUsers();
         Game[] games = createGames();
         Player[] players = createPlayers(users, games[2]);
-        Squad squad = createSquad(games[2], players[3]);
-        Squad squad2 = createSquad(games[2], players[3]);
+        Squad squad = createSquad(games[1], players[3]);
         joinSquad(games[2], squad, players[4]);
         kill(games[2], players[0], players[3]);
         addChat(games[2], players[3]);
