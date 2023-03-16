@@ -19,10 +19,10 @@ public class SecurityConfig {
                 .sessionManagement().disable()
                 // Disable CSRF -- not necessary when there are no sessions
                 .csrf().disable()
-                .anonymous().and()
                 // Enable security for http requests
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/resources/public").permitAll()
+                        .requestMatchers("/api/v1/resources/authorized/offline").hasRole("offline_access")
                         // All other endpoints are protected
                         .anyRequest().authenticated()
                 )
@@ -30,9 +30,5 @@ public class SecurityConfig {
                 .oauth2ResourceServer()
                 .jwt();
         return http.build();
-    }
-
-    public void configure(WebSecurity web) {
-        web.ignoring().requestMatchers("/api/v1/resources", "/api/v1/user");
     }
 }
