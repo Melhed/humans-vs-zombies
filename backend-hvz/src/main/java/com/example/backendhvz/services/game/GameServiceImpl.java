@@ -1,5 +1,6 @@
 package com.example.backendhvz.services.game;
 
+import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.enums.PlayerState;
 import com.example.backendhvz.models.Game;
 import com.example.backendhvz.models.Player;
@@ -35,10 +36,17 @@ public class GameServiceImpl implements GameService {
         return gameRepository.save(game);
     }
 
+
     @Override
     public Game addGame(Game game, Long creatingPlayerId) {
         Player creatingPlayer = playerRepository.findById(creatingPlayerId).get();
         if(creatingPlayer.getState() != PlayerState.ADMINISTRATOR) return null;
+        return gameRepository.save(game);
+    }
+
+    @Override
+    public Game addNewGame(Game game) {
+        game.setState(GameState.REGISTRATION);
         return gameRepository.save(game);
     }
 
@@ -65,6 +73,8 @@ public class GameServiceImpl implements GameService {
         if(deletingPlayer.getState() != PlayerState.ADMINISTRATOR) return;
         gameRepository.deleteById(gameId);
     }
+
+
 
     @Override
     public void delete(Game game) {

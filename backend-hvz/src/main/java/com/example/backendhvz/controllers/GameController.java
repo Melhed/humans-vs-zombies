@@ -2,6 +2,7 @@ package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.dtos.ChatDTO;
 import com.example.backendhvz.dtos.GameDTO;
+import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.mappers.ChatMapper;
 import com.example.backendhvz.mappers.GameMapper;
 import com.example.backendhvz.models.Chat;
@@ -15,6 +16,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/game")
 public class GameController {
 
@@ -44,6 +46,14 @@ public class GameController {
     public ResponseEntity<GameDTO> add(@RequestBody GameDTO gameDTO) {
         Game game = gameMapper.gameDtoToGame(gameDTO);
         gameService.add(game);
+        URI location = URI.create("/" + game.getId());
+        return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping("/add-new-game")
+    public ResponseEntity<GameDTO> addNewGame(@RequestBody GameDTO gameDTO) {
+        Game game = gameMapper.gameDtoToGame(gameDTO);
+        gameService.addNewGame(game);
         URI location = URI.create("/" + game.getId());
         return ResponseEntity.created(location).build();
     }

@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/user")
 public class HvZUserController {
 
