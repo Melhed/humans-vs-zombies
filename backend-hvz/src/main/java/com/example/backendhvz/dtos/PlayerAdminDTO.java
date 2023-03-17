@@ -12,6 +12,6 @@ public class PlayerAdminDTO {
     private boolean isHuman;
     private boolean isPatientZero;
     private String biteCode;
-    private Long user;
+    private String user;
     private Long game;
 }

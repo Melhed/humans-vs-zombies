@@ -9,6 +9,6 @@ public class PlayerDTO {
     private PlayerState state;
     private boolean isHuman;
     private String biteCode;
-    private Long user;
+    private String user;
     private Long game;
 }
