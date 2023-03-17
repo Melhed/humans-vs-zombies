@@ -2,6 +2,7 @@ package com.example.backendhvz.services.user;
 
 import com.example.backendhvz.exceptions.BadRequestException;
 import com.example.backendhvz.exceptions.NotFoundException;
+import com.example.backendhvz.models.AppUser;
 import com.example.backendhvz.models.HvZUser;
 import com.example.backendhvz.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
     public HvZUser add(HvZUser user) {
         return userRepository.save(user);
     }
+
 
     @Override
     public HvZUser update(HvZUser user) {
