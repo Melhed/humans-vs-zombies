@@ -21,20 +21,19 @@ public class SecurityConfig {
                 .csrf().disable()
                 // Enable security for http requests
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/resources/public").permitAll()
                         .requestMatchers("/api/v1/game").permitAll()
                         .requestMatchers("/api/v1/user/**").permitAll()
-                        .requestMatchers("/api/v1/resources/authorized/offline").hasRole("offline_access")
+                        .requestMatchers("/api/v1/game/3/squad").hasRole("hvz-user")
                         // All other endpoints are protected
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer()
-                .jwt(jwt -> jwt
-                        .jwtAuthenticationConverter(jwtRoleAuthenticationConverter()));
+                .jwt()
+                .jwtAuthenticationConverter(jwtAuthenticationConverter());
         return http.build();
     }
 
-    @Bean
+    /*@Bean
     public JwtAuthenticationConverter jwtRoleAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         // Use roles claim as authorities
@@ -44,6 +43,15 @@ public class SecurityConfig {
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }*/
+
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
 }
