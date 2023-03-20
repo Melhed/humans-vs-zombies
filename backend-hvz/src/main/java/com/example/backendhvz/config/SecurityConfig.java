@@ -22,6 +22,10 @@ public class SecurityConfig {
                 // Enable security for http requests
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/resources/public").permitAll()
+                        .requestMatchers("/api/v1/game").permitAll()
+                        .requestMatchers("/api/v1/game/3/squad").permitAll()
+                        .requestMatchers("/api/v1/game/add-new-game").hasRole("hvs-admin")
+
                         .requestMatchers("/api/v1/resources/authorized/offline").hasRole("offline_access")
                         // All other endpoints are protected
                         .anyRequest().authenticated()
