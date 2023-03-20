@@ -2,7 +2,6 @@ package com.example.backendhvz.services.user;
 
 import com.example.backendhvz.exceptions.BadRequestException;
 import com.example.backendhvz.exceptions.NotFoundException;
-import com.example.backendhvz.models.AppUser;
 import com.example.backendhvz.models.HvZUser;
 import com.example.backendhvz.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,23 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public HvZUser add(String uid) {
+        // Prevents internal server error for duplicates
+        if(userRepository.existsById(uid))
+            throw new BadRequestException("AppUserServiceImpl: add, filed");
+        // Create new user
+        HvZUser user = new HvZUser();
+        user.setUid(uid);
+        user.setComplete(false);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public HvZUser getById(String uid) {
+        return userRepository.findById(uid)
+                .orElseThrow(() -> new BadRequestException("UserServiceImpl: getById, user not found"));
+    }
 
     @Override
     public HvZUser update(HvZUser user) {
