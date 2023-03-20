@@ -58,8 +58,8 @@ public class KillServiceImpl implements KillService {
         if(!playerRepository.existsById(killPostDTO.getKillerId())) throw new NotFoundException("Killer with ID " + killPostDTO.getKillerId() + " not found.");
         if(!playerRepository.existsPlayerByBiteCodeAndGame_Id(killPostDTO.getBiteCode(), gameId)) throw new NotFoundException("Player with bite code " + killPostDTO.getBiteCode() + " not found.");
 
-        Player killPoster = playerRepository.findById(killPostDTO.getKillPosterId()).get();
-        if(killPoster.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("You need to be an " + PlayerState.ADMINISTRATOR + " to post a new kill!");
+//        Player killPoster = playerRepository.findById(killPostDTO.getKillPosterId()).get();
+//        if(killPoster.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("You need to be an " + PlayerState.ADMINISTRATOR + " to post a new kill!");
 
         Player killer = playerRepository.findById(killPostDTO.getKillerId()).get();
         if(!killer.getGame().getId().equals(gameId)) throw new BadRequestException("Killer is not in the game with the provided ID.");

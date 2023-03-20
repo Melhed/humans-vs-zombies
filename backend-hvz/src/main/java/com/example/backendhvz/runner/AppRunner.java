@@ -128,7 +128,7 @@ public class AppRunner implements ApplicationRunner {
     private Player[] createPlayers(HvZUser[] users, Game game) {
         Player[] players = new Player[5];
 
-        players[0] = new Player(null, PlayerState.ADMINISTRATOR, true, false, "000", users[0], game);
+        players[0] = new Player(null, PlayerState.ADMINISTRATOR, false, true, "000", users[0], game);
         playerRepository.save(players[0]);
 
         for (int i = 1; i < users.length; i++) {
