@@ -19,5 +19,6 @@ public interface PlayerService extends CRUDService<Player, Long> {
 
     void deletePlayerById(Long playerId, Long deletingPlayerId, Long gameId);
 
+    Player findByUserId(Long gameId, String userId);
 }
 

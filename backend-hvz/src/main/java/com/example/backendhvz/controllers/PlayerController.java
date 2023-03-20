@@ -55,6 +55,18 @@ public class PlayerController {
         }
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Object> findByUserId(@PathVariable Long gameId, @PathVariable String userId) {
+        try {
+            if (gameId == null || userId == null) throw new BadRequestException("Invalid input");
+            return ResponseEntity.ok(playerService.findByUserId(gameId, userId));
+        } catch (BadRequestException e) {
+            return exceptionHandler.handleBadRequest(e);
+        } catch (NotFoundException e) {
+            return exceptionHandler.handleNotFound(e);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Object> add(@PathVariable Long gameId, @RequestBody PlayerAdminDTO playerDTO) {
         if (gameId == null || playerDTO == null)

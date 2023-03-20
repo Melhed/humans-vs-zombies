@@ -153,6 +153,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Player findByUserId(Long gameId, String userId) {
+        if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
+        if (!userRepository.existsById(userId)) throw new NotFoundException("user id " + userId);
+        return playerRepository.findByGameIdAndUserId(gameId, userId).get();
+    }
+
+    @Override
     public void delete(Player player) {
         playerRepository.delete(player);
     }
