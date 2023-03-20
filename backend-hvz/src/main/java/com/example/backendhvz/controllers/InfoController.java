@@ -2,7 +2,6 @@ package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.models.AppUser;
 import com.example.backendhvz.services.appUser.AppUserService;
-import com.example.backendhvz.services.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -19,10 +18,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/v1/users")
 public class InfoController {
-    private final AppUserService userService;
+    private final AppUserService appUserService;
 
-    public InfoController(AppUserService userService) {
-        this.userService = userService;
+    public InfoController(AppUserService appUserService) {
+        this.appUserService = appUserService;
     }
     @GetMapping("info")
     public ResponseEntity getLoggedInUserInfo(@AuthenticationPrincipal Jwt principal) {
@@ -44,15 +43,15 @@ public class InfoController {
     @GetMapping("current")
     public ResponseEntity getCurrentlyLoggedInUser(@AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(
-                userService.findById(
-                        jwt.getClaimAsString("sub")
-                )
+            appUserService.findById(
+                jwt.getClaimAsString("sub")
+            )
         );
     }
 
     @PostMapping("register")
     public ResponseEntity addNewUserFromJwt(@AuthenticationPrincipal Jwt jwt) {
-        AppUser user = userService.add(jwt.getClaimAsString("sub"));
+        AppUser user = appUserService.add(jwt.getClaimAsString("sub"));
         URI uri = URI.create("api/v1/users/" + user.getUid());
         return ResponseEntity.created(uri).build();
     }

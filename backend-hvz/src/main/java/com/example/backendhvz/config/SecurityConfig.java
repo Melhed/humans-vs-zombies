@@ -2,8 +2,6 @@ package com.example.backendhvz.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -26,16 +24,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/resources/public").permitAll()
                         .requestMatchers("/api/v1/game").permitAll()
                         .requestMatchers("/api/v1/user/**").permitAll()
-                        .requestMatchers("/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/game/3/squad").hasRole("hvz-admin")
                         .requestMatchers("/api/v1/resources/authorized/offline").hasRole("offline_access")
                         // All other endpoints are protected
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer()
-                .jwt(jwt -> jwt
-                        .jwtAuthenticationConverter(jwtRoleAuthenticationConverter()));
+                .jwt(/*jwt -> jwt
+                        .jwtAuthenticationConverter(jwtRoleAuthenticationConverter())*/);
         return http.build();
     }
 

@@ -20,12 +20,18 @@ public class AppUserServiceImpl implements AppUserService{
     public AppUser add(String uid) {
         // Prevents internal server error for duplicates
         if(appUserRepository.existsById(Long.valueOf(uid)))
-            throw new BadRequestException("AppUserServiceImpl");
+            throw new BadRequestException("AppUserServiceImpl: add, filed");
         // Create new user
         AppUser user = new AppUser();
         user.setUid(uid);
         user.setComplete(false);
         return appUserRepository.save(user);
+    }
+
+    @Override
+    public AppUser getById(String uid) {
+        return appUserRepository.findById(Long.valueOf(uid))
+                .orElseThrow(() -> new BadRequestException("AppUserServiceImpl: getById, User Not Found"));
     }
 
     @Override
