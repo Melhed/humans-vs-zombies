@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping(path = "api/v1/game")
 public class GameController {
 
@@ -39,6 +39,7 @@ public class GameController {
     }
 
     @GetMapping("{gameId}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Object> findById(@PathVariable Long gameId) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
