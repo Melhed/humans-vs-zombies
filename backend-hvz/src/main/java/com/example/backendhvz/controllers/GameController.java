@@ -128,8 +128,8 @@ public class GameController {
         }
     }
 
-    @GetMapping("{gameId}/chat")
-    public ResponseEntity<Object> getFactionChat(@PathVariable Long gameId, @RequestBody Boolean playerIsHuman) {
+    @GetMapping("{gameId}/chat?player-is-human={playerIsHuman}")
+    public ResponseEntity<Object> getFactionChat(@PathVariable Long gameId, @PathVariable Boolean playerIsHuman) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if(playerIsHuman == null) throw new BadRequestException("playerIsHuman cannot be null.");
