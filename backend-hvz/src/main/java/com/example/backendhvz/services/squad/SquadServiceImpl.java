@@ -59,17 +59,11 @@ public class SquadServiceImpl implements SquadService{
     }
 
     @Override
-    public Squad updateSquad(Long gameId, Long squadId, Squad squad, Long playerId) throws NotFoundException, ForbiddenException {
+    public Squad updateSquad(Long gameId, Long squadId, Squad squad) throws NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!squadRepository.existsById(squadId)) throw new NotFoundException("Squad id " + squadId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
 
-        Player player = playerRepository.findById(playerId).get();
-
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
         if (!Objects.equals(squad.getId(), squadId)) throw new BadRequestException("input squad id and squad id in squadDTO does not match");
-
-        if (player.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only admins can update squad");
         return update(squad);
     }
 
@@ -80,18 +74,13 @@ public class SquadServiceImpl implements SquadService{
     }
 
     @Override
-    public void deleteSquadById(Long gameId, Long squadId, Long playerId) throws NotFoundException, ForbiddenException  {
+    public void deleteSquadById(Long gameId, Long squadId) throws NotFoundException, ForbiddenException  {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!squadRepository.existsById(squadId)) throw new NotFoundException("Squad id " + squadId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
 
-        Player player = playerRepository.findById(playerId).get();
         Squad squad = squadRepository.findById(squadId).get();
-
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
         if (!Objects.equals(squad.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match squad params");
 
-        if (player.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only admins can update squad");
         deleteById(squadId);
     }
 
@@ -192,23 +181,12 @@ public class SquadServiceImpl implements SquadService{
     }
 
     @Override
-    public Collection<SquadCheckIn> getSquadCheckIns(Long gameId, Long squadId, Long playerId) throws NotFoundException, ForbiddenException {
+    public Collection<SquadCheckIn> getSquadCheckIns(Long gameId, Long squadId) throws NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!squadRepository.existsById(squadId)) throw new NotFoundException("Squad id " + squadId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
 
         Squad squad = findById(squadId);
-        Player player = playerRepository.findById(playerId).get();
-
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
         if (!Objects.equals(squad.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match squads params");
-
-        if (squad.isHuman() != player.isHuman())
-            throw new ForbiddenException("To get squad check ins player needs to be the same fraction as squad");
-        if (player.getState() == PlayerState.UNREGISTERED || player.getState() == PlayerState.NO_SQUAD)
-            throw new ForbiddenException("To get squad chat player needs to be in a squad or admin");
-        if (!squadMemberRepository.existsBySquad_IdAndPlayer_Id(squadId, playerId))
-            throw new ForbiddenException("player with player id " + playerId + " is not part of squad with squad id " + squadId);
 
         return squadCheckInRepository.findAllBySquad_Id(squadId).get();
     }

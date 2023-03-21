@@ -60,12 +60,8 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game updateGame(Long updatingPlayerId, Game game) {
+    public Game updateGame(Game game) {
         if(!gameRepository.existsById(game.getId())) throw new NotFoundException("Game with ID " + game.getId() + " not found.");
-        if(!playerRepository.existsById(updatingPlayerId)) throw new NotFoundException("Player with ID " + updatingPlayerId + " not found.");
-
-        Player updatingPlayer = playerRepository.findById(updatingPlayerId).get();
-        if(updatingPlayer.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administrators can update games.");
         return gameRepository.save(game);
     }
 
@@ -76,12 +72,8 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void deleteGameById(Long gameId, Long deletingPlayerId) {
+    public void deleteGameById(Long gameId) {
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
-        if(!playerRepository.existsById(deletingPlayerId)) throw new NotFoundException("Player with ID " + deletingPlayerId + " not found.");
-
-        Player deletingPlayer = playerRepository.findById(deletingPlayerId).get();
-        if(deletingPlayer.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administratos can delete games.");
         gameRepository.deleteById(gameId);
     }
 

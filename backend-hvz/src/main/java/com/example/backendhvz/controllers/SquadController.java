@@ -64,10 +64,10 @@ public class SquadController {
     }
 
     @GetMapping("{squadId}/chat")
-    public ResponseEntity<Object> findAllSquadChats(@PathVariable Long gameId, @PathVariable Long squadId, @RequestBody Long playerId) {
+    public ResponseEntity<Object> findAllSquadChats(@PathVariable Long gameId, @PathVariable Long squadId) {
         try {
-            if (gameId == null || squadId == null || playerId == null) throw new BadRequestException("Invalid input");
-            return ResponseEntity.ok(chatMapper.chatsToChatDtos(chatService.findAllBySquadIdAndFaction(squadId, playerId, gameId)));
+            if (gameId == null || squadId == null) throw new BadRequestException("Invalid input");
+            return ResponseEntity.ok(chatMapper.chatsToChatDtos(chatService.findAllBySquadId(squadId, gameId)));
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);
         } catch (NotFoundException e) {
@@ -78,10 +78,10 @@ public class SquadController {
     }
 
     @GetMapping("{squadId}/check-in")
-    public ResponseEntity<Object> findAllSquadCheckIns(@PathVariable Long gameId, @PathVariable Long squadId, @RequestBody Long playerId) {
+    public ResponseEntity<Object> findAllSquadCheckIns(@PathVariable Long gameId, @PathVariable Long squadId) {
         try {
-            if (gameId == null || squadId == null || playerId == null) throw new BadRequestException("Invalid input");
-            return ResponseEntity.ok(squadCheckInMapper.checkInsTocheckInDTOs(squadService.getSquadCheckIns(gameId, squadId, playerId)));
+            if (gameId == null || squadId == null) throw new BadRequestException("Invalid input");
+            return ResponseEntity.ok(squadCheckInMapper.checkInsTocheckInDTOs(squadService.getSquadCheckIns(gameId, squadId)));
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);
         } catch (NotFoundException e) {
@@ -157,7 +157,7 @@ public class SquadController {
         try {
             if (gameId == null || squadId == null || squadDTO == null || playerId == null) throw new BadRequestException("Invalid input");
             Squad squad = squadMapper.squadDtoToSquad(squadDTO);
-            return ResponseEntity.ok(squadService.updateSquad(gameId, squadId, squad, playerId));
+            return ResponseEntity.ok(squadService.updateSquad(gameId, squadId, squad));
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);
         } catch (NotFoundException e) {
@@ -168,10 +168,10 @@ public class SquadController {
     }
 
     @DeleteMapping("{squadId}")
-    public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long squadId, @RequestBody Long playerId) {
+    public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long squadId) {
         try {
-            if (gameId == null || squadId == null || playerId == null) throw new BadRequestException("Invalid input");
-            squadService.deleteSquadById(gameId, squadId, playerId);
+            if (gameId == null || squadId == null) throw new BadRequestException("Invalid input");
+            squadService.deleteSquadById(gameId, squadId);
             return ResponseEntity.noContent().build();
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);

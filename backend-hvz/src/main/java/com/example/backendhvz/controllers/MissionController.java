@@ -29,11 +29,10 @@ public class MissionController {
     }
     // All but unregistered faction appropriate
     @GetMapping
-    public ResponseEntity<Object> findMissionsByGameId(@PathVariable Long gameId, @RequestBody Long playerId) {
+    public ResponseEntity<Object> findMissionsByGameId(@PathVariable Long gameId) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");
-            if (playerId == null) throw new BadRequestException("Player ID cannot be null.");
-            return ResponseEntity.ok(missionMapper.missionsToMissionDtos(missionService.findMissionsByGameId(gameId, playerId)));
+            return ResponseEntity.ok(missionMapper.missionsToMissionDtos(missionService.findMissionsByGameId(gameId)));
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
@@ -43,13 +42,12 @@ public class MissionController {
 
     // All but unregistered faction appropriate
     @GetMapping("{missionId}")
-    public ResponseEntity<Object> findMissionByIdAndGameId(@PathVariable Long gameId, @PathVariable Long missionId, @RequestBody Long playerId) {
+    public ResponseEntity<Object> findMissionByIdAndGameId(@PathVariable Long gameId, @PathVariable Long missionId) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if (missionId == null) throw new BadRequestException("Mission ID cannot be null.");
-            if (playerId == null) throw new BadRequestException("Player ID cannot be null.");
 
-            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.findMissionByIdAndGameId(gameId, missionId, playerId)));
+            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.findMissionByIdAndGameId(gameId, missionId)));
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
@@ -59,15 +57,14 @@ public class MissionController {
 
     // Admin only
     @PostMapping
-    public ResponseEntity add(@PathVariable Long gameId, @RequestBody MissionDTO missionDTO, @RequestBody Long playerId) {
+    public ResponseEntity add(@PathVariable Long gameId, @RequestBody MissionDTO missionDTO) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if(missionDTO == null) throw new BadRequestException("Mission cannot be null.");
-            if(playerId == null) throw new BadRequestException("Player ID cannot be null.");
 
             missionDTO.setGameId(gameId);
             Mission mission = missionMapper.missionDtoToMission(missionDTO);
-            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.addMission(mission, playerId)));
+            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.addMission(mission)));
         } catch(BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch(NotFoundException e) {
@@ -78,16 +75,15 @@ public class MissionController {
     }
     // Admin only
     @PutMapping("{missionId}")
-    public ResponseEntity update(@PathVariable Long gameId, @PathVariable Long missionId, @RequestBody MissionDTO missionDTO, @RequestBody Long playerId) {
+    public ResponseEntity update(@PathVariable Long gameId, @PathVariable Long missionId, @RequestBody MissionDTO missionDTO) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if (missionId == null) throw new BadRequestException("Mission ID cannot be null.");
             if (missionDTO == null) throw new BadRequestException("Mission cannot be null.");
-            if (playerId == null) throw new BadRequestException("Player ID cannot be null.");
             if (!gameId.equals(missionDTO.getGameId()))
                 throw new BadRequestException("Mission's game ID doesn't match with the provided game ID.");
 
-            missionService.updateMission(missionMapper.missionDtoToMission(missionDTO), playerId);
+            missionService.updateMission(missionMapper.missionDtoToMission(missionDTO));
             URI location = URI.create("/" + missionDTO.getId());
             return ResponseEntity.created(location).build();
         } catch(BadRequestException e) {
@@ -100,13 +96,12 @@ public class MissionController {
     }
     // Admin only
     @DeleteMapping("{missionId}")
-    public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long missionId, @RequestBody Long playerId) {
+    public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long missionId) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if (missionId == null) throw new BadRequestException("Mission ID cannot be null.");
-            if (playerId == null) throw new BadRequestException("Player ID cannot be null.");
 
-            missionService.deleteMissionById(missionId, playerId);
+            missionService.deleteMissionById(missionId);
             return ResponseEntity.noContent().build();
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);

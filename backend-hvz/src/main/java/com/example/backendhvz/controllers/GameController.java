@@ -2,7 +2,6 @@ package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.dtos.ChatDTO;
 import com.example.backendhvz.dtos.GameDTO;
-import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.exceptions.BadRequestException;
 import com.example.backendhvz.exceptions.ForbiddenException;
 import com.example.backendhvz.exceptions.NotFoundException;
@@ -83,15 +82,14 @@ public class GameController {
     }
 
     @PutMapping("{gameId}")
-    public ResponseEntity update(@PathVariable Long gameId, @RequestBody Long updatingPlayerId, @RequestBody GameDTO gameDTO) {
+    public ResponseEntity update(@PathVariable Long gameId, @RequestBody GameDTO gameDTO) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");
-            if (updatingPlayerId == null) throw new BadRequestException("ID of updating player cannot be null.");
             if (gameDTO == null) throw new BadRequestException("Game cannot be null.");
             if (gameId != gameDTO.getId()) throw new BadRequestException("Game IDs don't match.");
 
             Game game = gameMapper.gameDtoToGame(gameDTO);
-            return ResponseEntity.ok(gameService.updateGame(updatingPlayerId, game));
+            return ResponseEntity.ok(gameService.updateGame(game));
         } catch(BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
@@ -102,11 +100,10 @@ public class GameController {
     }
 
     @DeleteMapping("{gameId}")
-    public ResponseEntity deleteById(@PathVariable Long gameId, @RequestBody Long deletingPlayerId) {
+    public ResponseEntity deleteById(@PathVariable Long gameId) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
-            if(deletingPlayerId == null) throw new BadRequestException("ID of deleting player cannot be null.");
-            gameService.deleteGameById(gameId, deletingPlayerId);
+            gameService.deleteGameById(gameId);
             return ResponseEntity.noContent().build();
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);

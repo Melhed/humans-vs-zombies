@@ -44,42 +44,39 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Collection<Player> findAll(Long gameId) {
-        return playerRepository.findAllByGameId(gameId);
+    public Collection<Object> findAll(Long gameId) {
+        if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
+
+        return new ArrayList<>(playerMapper.playersToPlayerDtos(playerRepository.findAllByGameId(gameId)));
     }
 
     @Override
-    public Object findByIdAndPlayerState(Long gameId, Long playerId, Long requestingPlayerId) throws BadRequestException, NotFoundException {
+    public Object findByIdAndPlayerState(Long gameId, Long playerId) throws BadRequestException, NotFoundException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
         if (!playerRepository.existsById(playerId)) throw new NotFoundException("player id " + playerId);
-        if (!playerRepository.existsById(requestingPlayerId)) throw new NotFoundException("player id " + requestingPlayerId);
 
-        Player requestingPlayer = findById(requestingPlayerId);
         Player player = findById(playerId);
 
-        if (!Objects.equals(requestingPlayer.getGame().getId(), gameId) || !Objects.equals(player.getGame().getId(), gameId))
+        if (!Objects.equals(player.getGame().getId(), gameId))
             throw new BadRequestException("Game id does not match players params");
 
-        if (requestingPlayer.getState() == PlayerState.ADMINISTRATOR) {
-            return playerMapper.playerToPlayerAdminDto(player);
-        }
         return playerMapper.playerToPlayerDto(player);
     }
-
-    @Override
-    public Collection<Object> findAllByPlayerState(Long gameId, Long requestingPlayerId) throws BadRequestException, NotFoundException {
-        if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
-        if (!playerRepository.existsById(requestingPlayerId)) throw new NotFoundException("player id " + requestingPlayerId);
-
-        Player requestingPlayer = findById(requestingPlayerId);
-        if (requestingPlayer.getGame().getId() != gameId)
-            throw new BadRequestException("Game id does not match players params");
-
-        if (requestingPlayer.getState() == PlayerState.ADMINISTRATOR) {
-            return new ArrayList<>(playerMapper.playersToPlayerAdminDtos(findAll(gameId)));
-        }
-        return new ArrayList<>(playerMapper.playersToPlayerDtos(findAll(gameId)));
-    }
+//
+//    @Override
+//    public Collection<Object> findAllByPlayerState(Long gameId, Long requestingPlayerId) throws BadRequestException, NotFoundException {
+//        if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
+//        if (!playerRepository.existsById(requestingPlayerId)) throw new NotFoundException("player id " + requestingPlayerId);
+//
+//        Player requestingPlayer = findById(requestingPlayerId);
+//        if (requestingPlayer.getGame().getId() != gameId)
+//            throw new BadRequestException("Game id does not match players params");
+//
+//        if (requestingPlayer.getState() == PlayerState.ADMINISTRATOR) {
+//            return new ArrayList<>(playerMapper.playersToPlayerAdminDtos(findAll(gameId)));
+//        }
+//        return new ArrayList<>(playerMapper.playersToPlayerDtos(findAll(gameId)));
+//    }
 
     @Override
     public Player addNewPlayer(Long gameId, HvZUserDTO hvZUserDTO) throws NotFoundException {
@@ -141,14 +138,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     // TODO: This should be cascading
     @Override
-    public void deletePlayerById(Long playerId, Long deletingPlayerId, Long gameId) throws BadRequestException, NotFoundException, ForbiddenException {
+    public void deletePlayerById(Long playerId, Long gameId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!playerRepository.existsById(playerId)) throw new NotFoundException("player id " + playerId);
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
-        if (!playerRepository.existsById(deletingPlayerId)) throw new NotFoundException("player id " + deletingPlayerId);
-        Player deletingPlayer = findById(deletingPlayerId);
-        if (deletingPlayer.getGame().getId() != gameId)
-            throw new BadRequestException("Game id does not match players params");
-        if(deletingPlayer.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Deleting player requires admin state");
         playerRepository.deleteById(playerId);
     }
 

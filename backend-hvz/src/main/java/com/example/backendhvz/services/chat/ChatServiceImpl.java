@@ -61,21 +61,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Collection<Chat> findAllBySquadIdAndFaction(Long squadId, Long playerId, Long gameId) throws BadRequestException, NotFoundException, ForbiddenException {
+    public Collection<Chat> findAllBySquadId(Long squadId, Long gameId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!squadRepository.existsById(squadId)) throw new NotFoundException("Squad id " + squadId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
-        Player player = playerRepository.findById(playerId).get();
         Squad squad = squadRepository.findById(squadId).get();
 
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
         if (!Objects.equals(squad.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match squads params");
-        if (!squadMemberRepository.existsBySquad_IdAndPlayer_Id(squadId, playerId))
-            throw new ForbiddenException("player with player id " + playerId + " is not part of squad with squad id " + squadId);
-        if (player.isHuman() != squad.isHuman())
-            throw new ForbiddenException("To get squad chat player needs to be the same fraction as squad");
-        if (player.getState() == PlayerState.NO_SQUAD || player.getState() == PlayerState.UNREGISTERED)
-            throw new ForbiddenException("To get squad chat player needs to be in a squad or admin");
         if (squad.isHuman())
             return chatRepository.findAllBySquad_IdAndHumanGlobal(squadId).get();
         return chatRepository.findAllBySquad_IdAndZombieGlobal(squadId).get();
