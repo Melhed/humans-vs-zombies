@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("http://localhost:4200")
 @RequestMapping(path = "api/v1/game")
 public class GameController {
 

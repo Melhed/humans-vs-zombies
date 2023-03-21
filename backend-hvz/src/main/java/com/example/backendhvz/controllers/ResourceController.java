@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@CrossOrigin
+@CrossOrigin("http://localhost:4200")
 @RequestMapping("api/v1/resources")
 public class ResourceController {
 
