@@ -44,16 +44,27 @@ public class PlayerController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAll(@PathVariable Long gameId, @RequestBody Long requestingPlayerId) {
+    public ResponseEntity<Object> findAll(@PathVariable Long gameId) {
         try {
-            if (gameId == null || requestingPlayerId == null) throw new BadRequestException("Invalid input");
-            return ResponseEntity.ok(playerService.findAllByPlayerState(gameId, requestingPlayerId));
+            if (gameId == null) throw new BadRequestException("Invalid input");
+            return ResponseEntity.ok(playerService.findAll(gameId));
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
             return exceptionHandler.handleNotFound(e);
         }
     }
+//    @GetMapping
+//    public ResponseEntity<Object> findAll(@PathVariable Long gameId, @RequestBody Long requestingPlayerId) {
+//        try {
+//            if (gameId == null || requestingPlayerId == null) throw new BadRequestException("Invalid input");
+//            return ResponseEntity.ok(playerService.findAllByPlayerState(gameId, requestingPlayerId));
+//        } catch (BadRequestException e) {
+//            return exceptionHandler.handleBadRequest(e);
+//        } catch (NotFoundException e) {
+//            return exceptionHandler.handleNotFound(e);
+//        }
+//    }
 
     @PostMapping
     public ResponseEntity<Object> add(@PathVariable Long gameId, @RequestBody PlayerAdminDTO playerDTO) {

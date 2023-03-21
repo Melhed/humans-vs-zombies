@@ -23,6 +23,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/resources/public").permitAll()
                         .requestMatchers("/api/v1/game").permitAll()
+                        .requestMatchers("api/v1/game/3/player").permitAll()
+                        .requestMatchers("api/v1/game/3/player/1").permitAll()
+                        .requestMatchers("api/v1/game/3/**").permitAll()
                         .requestMatchers("/api/v1/game/**").permitAll()
                         .requestMatchers("/api/v1/game/add-new-game").hasRole("hvs-admin")
 
