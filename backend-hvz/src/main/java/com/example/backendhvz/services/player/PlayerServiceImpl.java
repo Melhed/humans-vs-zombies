@@ -124,10 +124,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player updatePlayer(Player player, Long updatingPlayerId) throws NotFoundException, ForbiddenException {
-        if (!playerRepository.existsById(updatingPlayerId)) throw new NotFoundException("player id " + updatingPlayerId);
-        Player updatingPlayer = findById(updatingPlayerId);
-        if (updatingPlayer.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Updating player requires admin state");
+    public Player updatePlayer(Player player) throws NotFoundException, ForbiddenException {
         return playerRepository.save(player);
     }
 

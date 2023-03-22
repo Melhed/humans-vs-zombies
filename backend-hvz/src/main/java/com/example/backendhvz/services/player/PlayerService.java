@@ -13,7 +13,7 @@ public interface PlayerService extends CRUDService<Player, Long> {
 
     Player addNewPlayer(Long gameId, HvZUserDTO hvZUserDTO);
 
-    Player updatePlayer(Player player, Long updatingPlayerId);
+    Player updatePlayer(Player player);
 
     void deletePlayerById(Long playerId, Long gameId);
 

@@ -100,7 +100,7 @@ public class PlayerController {
             if (!Objects.equals(gameId, playerDTO.getGame()))
                 throw new BadRequestException("Game id does not match players params");
             Player player = playerMapper.playerAdminDtoToPlayer(playerDTO);
-            return ResponseEntity.ok(playerService.updatePlayer(player, playerId));
+            return ResponseEntity.ok(playerService.updatePlayer(player));
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);
         } catch (NotFoundException e) {
