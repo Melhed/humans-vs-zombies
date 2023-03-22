@@ -93,12 +93,18 @@ public class PlayerController {
         }
     }
 
+//    @PutMapping("{playerId}")
+//    public ResponseEntity update(@PathVariable Long gameId, @PathVariable Long playerId) {
+//        Player player = playerService.findById(playerId);
+//        return ResponseEntity.ok(playerService.updatePlayer(player, playerId));
+//    }
+
     @PutMapping("{playerId}")
     public ResponseEntity update(@RequestBody PlayerAdminDTO playerDTO, @PathVariable Long gameId, @PathVariable Long playerId) {
         try {
             if (gameId == null || playerDTO == null || playerId == null) throw new BadRequestException("Invalid input");
             if (!Objects.equals(gameId, playerDTO.getGame()))
-                throw new BadRequestException("Game id does not match players params");
+                throw new BadRequestException("Game id does not match players params ***");
             Player player = playerMapper.playerAdminDtoToPlayer(playerDTO);
             return ResponseEntity.ok(playerService.updatePlayer(player, playerId));
         } catch (ForbiddenException e) {
