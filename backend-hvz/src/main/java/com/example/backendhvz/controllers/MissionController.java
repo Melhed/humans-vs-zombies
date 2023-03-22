@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Collection;
 
 @RestController
 @CrossOrigin
@@ -29,11 +28,10 @@ public class MissionController {
     }
     // All but unregistered faction appropriate
     @GetMapping
-    public ResponseEntity<Object> findMissionsByGameId(@PathVariable Long gameId, @RequestBody Long playerId) {
+    public ResponseEntity<Object> findMissionsByGameId(@PathVariable Long gameId) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");
-            if (playerId == null) throw new BadRequestException("Player ID cannot be null.");
-            return ResponseEntity.ok(missionMapper.missionsToMissionDtos(missionService.findMissionsByGameId(gameId, playerId)));
+            return ResponseEntity.ok(missionMapper.missionsToMissionDtos(missionService.findMissionsByGameId(gameId)));
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
@@ -63,11 +61,10 @@ public class MissionController {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if(missionDTO == null) throw new BadRequestException("Mission cannot be null.");
-            //if(playerId == null) throw new BadRequestException("Player ID cannot be null.");
 
             missionDTO.setGameId(gameId);
             Mission mission = missionMapper.missionDtoToMission(missionDTO);
-            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.addMission(mission)));
+            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.add(mission)));
         } catch(BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch(NotFoundException e) {

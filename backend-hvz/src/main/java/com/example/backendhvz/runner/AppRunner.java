@@ -1,9 +1,6 @@
 package com.example.backendhvz.runner;
 
-import com.example.backendhvz.controllers.GameController;
-import com.example.backendhvz.controllers.KillController;
-import com.example.backendhvz.controllers.PlayerController;
-import com.example.backendhvz.controllers.SquadController;
+import com.example.backendhvz.controllers.*;
 import com.example.backendhvz.dtos.*;
 import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.enums.PlayerState;
@@ -20,6 +17,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Component
@@ -43,8 +41,9 @@ public class AppRunner implements ApplicationRunner {
     private final SquadServiceImpl squadServiceImpl;
 
     private final KillController killController;
+    private final MissionController missionController;
 
-    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, PlayerRepository playerRepository, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper, KillController killController, SquadServiceImpl squadServiceImpl) {
+    public AppRunner(GameController gameController, GameMapper gameMapper, PlayerController playerController, PlayerMapper playerMapper, PlayerService playerService, PlayerRepository playerRepository, UserRepository userRepository, ChatRepository chatRepository, ChatMapper chatMapper, SquadController squadController, SquadMapper squadMapper, HvZUserMapper hvZUserMapper, KillController killController, SquadServiceImpl squadServiceImpl, MissionController missionController) {
         this.gameController = gameController;
         this.gameMapper = gameMapper;
         this.playerController = playerController;
@@ -59,6 +58,7 @@ public class AppRunner implements ApplicationRunner {
         this.hvZUserMapper = hvZUserMapper;
         this.killController = killController;
         this.squadServiceImpl = squadServiceImpl;
+        this.missionController = missionController;
     }
 
     @Override
@@ -73,6 +73,7 @@ public class AppRunner implements ApplicationRunner {
         addChat(games[2], players[3]);
         addSquadChat(games[2], players[3], squad);
         addSquadCheckIn(games[2], squad, players[3]);
+        addMission(games[2]);
         printPlayers(players);
         System.out.println(playerController.findById(games[0].getId(), players[1].getId(), players[1].getId()));
         System.out.println(squadController.findAllSquadChats(games[2].getId(), squad.getId(), players[2].getId()));
@@ -100,6 +101,12 @@ public class AppRunner implements ApplicationRunner {
 
     private void kill(Game game, Player killer, Player victim) {
         killController.add(game.getId(), new KillPostDTO(killer.getId(), killer.getId(), victim.getBiteCode(), "Very sad", "20", "30"));
+    }
+
+    private void addMission(Game game) {
+        Date startDate = Date.valueOf("2023-03-22");
+        Date endDate = Date.valueOf("2023-03-23");
+        missionController.add(game.getId(), new MissionDTO(1, "Test", "Test mission", startDate, endDate, 376, 66, true, false, game.getId()));
     }
 
     private Game[] createGames() {

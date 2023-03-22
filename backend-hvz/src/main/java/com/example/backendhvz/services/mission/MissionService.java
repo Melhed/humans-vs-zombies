@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface MissionService extends CRUDService<Mission, Long> {
 
-    Collection<Mission> findMissionsByGameId(Long gameId, Long playerId);
+    Collection<Mission> findMissionsByGameId(Long gameId);
     Mission findMissionByIdAndGameId(Long gameId, Long missionId, Long playerId);
 
     Mission addMission(Mission mission);
