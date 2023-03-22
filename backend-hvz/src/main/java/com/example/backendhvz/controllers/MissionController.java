@@ -59,15 +59,15 @@ public class MissionController {
 
     // Admin only
     @PostMapping
-    public ResponseEntity add(@PathVariable Long gameId, @RequestBody MissionDTO missionDTO, @RequestBody Long playerId) {
+    public ResponseEntity add(@PathVariable Long gameId, @RequestBody MissionDTO missionDTO) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if(missionDTO == null) throw new BadRequestException("Mission cannot be null.");
-            if(playerId == null) throw new BadRequestException("Player ID cannot be null.");
+            //if(playerId == null) throw new BadRequestException("Player ID cannot be null.");
 
             missionDTO.setGameId(gameId);
             Mission mission = missionMapper.missionDtoToMission(missionDTO);
-            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.addMission(mission, playerId)));
+            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.addMission(mission)));
         } catch(BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch(NotFoundException e) {

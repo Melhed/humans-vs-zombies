@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,7 +23,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/resources/public").permitAll()
                         .requestMatchers("/api/v1/resources/authorized/offline").hasRole("offline_access")
                         // All other endpoints are protected
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer()

@@ -11,6 +11,8 @@ public class MissionDTO {
     private String description;
     private Date startTime;
     private Date endTime;
+    private Integer lat;
+    private Integer lng;
     private boolean isHumanVisible;
     private boolean isZombieVisible;
     private Long gameId;

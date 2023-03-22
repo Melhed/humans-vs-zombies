@@ -43,12 +43,7 @@ public class MissionServiceImpl implements MissionService{
     }
 
     @Override
-    public Mission addMission(Mission mission, Long playerId) {
-        if(!playerRepository.existsById(playerId)) throw new NotFoundException("Creating player with ID " + playerId + " not found.");
-
-        Player player = playerRepository.findById(playerId).get();
-        if (player.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administrators can create missions.");
-
+    public Mission addMission(Mission mission) {
         return add(mission);
     }
 
