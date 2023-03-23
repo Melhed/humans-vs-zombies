@@ -6,7 +6,7 @@ import java.sql.Date;
 
 @Data
 public class MissionDTO {
-    private Long id;
+    private long missionID;
     private String name;
     private String description;
     private Date startTime;
@@ -17,8 +17,8 @@ public class MissionDTO {
     private boolean isZombieVisible;
     private Long gameId;
 
-    public MissionDTO(int i, String test, String testMission, Date startDate, Date endDate, int i1, int i2, boolean b, boolean b1, Long id) {
-        this.id = (long) i;
+    public MissionDTO(long i, String test, String testMission, Date startDate, Date endDate, int i1, int i2, boolean b, boolean b1, Long id) {
+        this.missionID = i;
         this.name = test;
         this.description = testMission;
         this.startTime = startDate;

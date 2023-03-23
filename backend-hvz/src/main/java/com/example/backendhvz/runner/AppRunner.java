@@ -106,7 +106,7 @@ public class AppRunner implements ApplicationRunner {
     private void addMission(Game game) {
         Date startDate = Date.valueOf("2023-03-22");
         Date endDate = Date.valueOf("2023-03-23");
-        missionController.add(game.getId(), new MissionDTO(1, "Test", "Test mission", startDate, endDate, 376, 66, true, false, game.getId()));
+        missionController.add(game.getId(), new MissionDTO(1, "Test", "Test mission", startDate, endDate, 0, 0, true, false, game.getId()));
     }
 
     private Game[] createGames() {
