@@ -94,6 +94,7 @@ public class SquadController {
     @PostMapping // POST /game/<game_id>/squad
     public ResponseEntity<Object> add(@PathVariable Long gameId, @RequestBody SquadPostDTO squadPostDTO) {
         try {
+            System.out.println("=>>>>>>>>>>>>>>>>" + gameId + squadPostDTO);
             if (squadPostDTO == null || gameId == null) throw new BadRequestException("Invalid input");
             return ResponseEntity.ok(squadMapper.squadToSquadDto(squadService.addSquad(gameId, squadPostDTO)));
         } catch (ForbiddenException e) {
