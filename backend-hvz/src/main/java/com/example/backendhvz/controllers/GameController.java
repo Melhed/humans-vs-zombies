@@ -125,12 +125,11 @@ public class GameController {
         }
     }
 
-    @GetMapping("{gameId}/chat?player-is-human={playerIsHuman}")
-    public ResponseEntity<Object> getFactionChat(@PathVariable Long gameId, @PathVariable Boolean playerIsHuman) {
+    @GetMapping("{gameId}/chat")
+    public ResponseEntity<Object> getFactionChat(@PathVariable Long gameId) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
-            if(playerIsHuman == null) throw new BadRequestException("playerIsHuman cannot be null.");
-            return ResponseEntity.ok(chatMapper.chatsToChatDtos(chatService.findAllByGameId(gameId, playerIsHuman)));
+            return ResponseEntity.ok(chatMapper.chatsToChatDtos(chatService.findAllByGameId(gameId)));
         } catch(BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {

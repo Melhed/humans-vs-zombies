@@ -175,7 +175,7 @@ public class SquadServiceImpl implements SquadService{
             throw new ForbiddenException("To add squad check ins player needs to be the same fraction as squad");
         if (player.getState() == PlayerState.UNREGISTERED || player.getState() == PlayerState.NO_SQUAD)
             throw new ForbiddenException("To add squad chat player needs to be in a squad or admin");
-        if (!squadMemberRepository.existsBySquad_IdAndPlayer_Id(squadId, player.getId()))
+        if (!squadMemberRepository.existsBySquadIdAndPlayerId(squadId, player.getId()))
             throw new ForbiddenException("player with player id " + player.getId() + " is not part of squad with squad id " + squadId);
         return squadCheckInRepository.save(checkIn);
     }

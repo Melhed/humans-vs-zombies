@@ -71,11 +71,13 @@ public class AppRunner implements ApplicationRunner {
         joinSquad(games[2], squad, players[4]);
         kill(games[2], players[0], players[3]);
         addChat(games[2], players[3]);
+        addChat(games[2], players[1]);
+        addChat(games[2], players[2]);
         addSquadChat(games[2], players[3], squad);
-        addSquadCheckIn(games[2], squad, players[3]);
-        printPlayers(players);
-        System.out.println(playerController.findById(games[0].getId(), players[1].getId()));
-        System.out.println(squadController.findAllSquadChats(games[2].getId(), squad.getId()));
+//        addSquadCheckIn(games[2], squad, players[3]);
+//        printPlayers(players);
+//        System.out.println(playerController.findById(games[0].getId(), players[1].getId()));
+//        System.out.println(squadController.findAllSquadChats(games[2].getId(), squad.getId()));
     }
 
     private void addSquadCheckIn(Game game, Squad squad, Player player) {
@@ -87,7 +89,10 @@ public class AppRunner implements ApplicationRunner {
     }
 
     private void addSquadChat(Game game, Player player, Squad squad) {
-        squadController.addSquadChat(game.getId(), squad.getId(), new ChatDTO(null, "Here comes the sun", new Timestamp(System.currentTimeMillis()), true, false, player.getId(), game.getId(), squad.getId()));
+        System.out.println("Player id " + player.getId());
+        System.out.println("Game id " + game.getId());
+        System.out.println("Squad id " + squad.getId());
+        System.out.println(squadController.addSquadChat(game.getId(), squad.getId(), new ChatDTO(null, "Here comes the sun", new Timestamp(System.currentTimeMillis()), true, false, player.getId(), game.getId(), squad.getId())));
     }
 
     private void joinSquad(Game game, Squad squad, Player player) {

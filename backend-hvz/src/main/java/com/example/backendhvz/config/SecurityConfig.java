@@ -26,6 +26,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user").permitAll()
                         .requestMatchers("/api/v1/game/3/player").permitAll()
                         .requestMatchers("/api/v1/game/3/chat/**").permitAll()
+                        .requestMatchers("/api/v1/game/3/squad/").permitAll()
+                        .requestMatchers("/api/v1/game/3/squad/**").permitAll()
                         .requestMatchers("/api/v1/game/3/chat/?player-is-human=true").permitAll()
                         .requestMatchers("/api/v1/game/3/chat/?player-is-human=false").permitAll()
                         .requestMatchers("/api/v1/game").permitAll()

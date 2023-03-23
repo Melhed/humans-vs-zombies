@@ -123,6 +123,8 @@ public class SquadController {
     public ResponseEntity<Object> addSquadChat(@PathVariable Long gameId, @PathVariable Long squadId, @RequestBody ChatDTO chatDTO) {
         try {
             if (gameId == null || squadId == null || chatDTO == null) throw new BadRequestException("Invalid input");
+            System.out.println("Controller game id " + gameId);
+            System.out.println("Controller squad id " + squadId);
             return ResponseEntity.ok(chatMapper.chatToChatDto(chatService.addSquadChat(chatMapper.chatDtoToChat(chatDTO), gameId, squadId)));
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);

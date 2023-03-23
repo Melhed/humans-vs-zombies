@@ -54,10 +54,9 @@ public class ChatServiceImpl implements ChatService {
         return chatRepository.findAllBySquad(null).get();
     }
     @Override
-    public Collection<Chat> findAllByGameId(Long gameId, boolean playerIsHuman) {
+    public Collection<Chat> findAllByGameId(Long gameId) {
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
-        if (playerIsHuman) return chatRepository.findAllByGameIdAndHumanGlobal(gameId).get();
-        return chatRepository.findAllByGameIdAndZombieGlobal(gameId).get();
+        return chatRepository.findAllByGameId(gameId).get();
     }
 
     @Override
@@ -85,19 +84,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat addSquadChat(Chat chat, Long gameId, Long playerId) throws BadRequestException, NotFoundException, ForbiddenException {
+    public Chat addSquadChat(Chat chat, Long gameId, Long squadId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
-
-        Player player = playerRepository.findById(playerId).get();
-
-        if (!Objects.equals(player, chat.getPlayer())) throw new BadRequestException("requested player is not same as chat is pointing at");
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
 
         if (chat.getPlayer().getState() == PlayerState.NO_SQUAD || chat.getPlayer().getState() == PlayerState.UNREGISTERED)
             throw new ForbiddenException("To add squad chat player needs to be in a squad or admin");
-        if (!squadMemberRepository.existsBySquad_IdAndPlayer_Id(chat.getSquad().getId(), playerId))
-            throw new ForbiddenException("player with player id " + playerId + " is not part of squad with squad id " + chat.getSquad().getId());
 
         return chatRepository.save(chat);
     }
