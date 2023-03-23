@@ -43,12 +43,7 @@ public class MissionServiceImpl implements MissionService{
     }
 
     @Override
-    public Mission addMission(Mission mission, Long playerId) {
-        if(!playerRepository.existsById(playerId)) throw new NotFoundException("Creating player with ID " + playerId + " not found.");
-
-        Player player = playerRepository.findById(playerId).get();
-        if (player.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administrators can create missions.");
-
+    public Mission addMission(Mission mission) {
         return add(mission);
     }
 
@@ -90,15 +85,9 @@ public class MissionServiceImpl implements MissionService{
     }
 
     @Override
-    public Collection<Mission> findMissionsByGameId(Long gameId, Long playerId) {
+    public Collection<Mission> findMissionsByGameId(Long gameId) {
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
-        if(!playerRepository.existsById(playerId)) throw new NotFoundException("Player with ID " + playerId + " not found.");
-
-        Player player = playerRepository.findById(playerId).get();
-        if(!gameId.equals(player.getGame().getId())) throw new BadRequestException("Player isn't registered to the game with the provided ID.");
-
-        if (player.isHuman()) return missionRepository.findMissionsByGameIdAndHumanVisible(gameId).get();
-        return missionRepository.findMissionsByGameIdAndZombieVisible(gameId).get();
+        return missionRepository.findMissionsByGameId(gameId).get();
     }
 
     @Override

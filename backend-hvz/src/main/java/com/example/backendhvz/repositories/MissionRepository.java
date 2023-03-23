@@ -18,4 +18,8 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
     @Query("select m from Mission m where m.game.id = ?1 and m.isZombieVisible = true")
     Optional<Collection<Mission>> findMissionsByGameIdAndZombieVisible(Long gameId);
     Optional<Mission> findMissionByIdAndGame_Id(Long gameId, Long missionId);
+
+    @Modifying
+    @Query("select m from Mission m where m.game.id = ?1")
+    Optional<Collection<Mission>> findMissionsByGameId(Long gameId);
 }

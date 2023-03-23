@@ -18,11 +18,11 @@ public class Mission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mission_id")
     private Long id;
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String name;
-    @Column(name = "is_human_visible", nullable = false)
+    @Column(name = "is_human_visible")
     private boolean isHumanVisible;
-    @Column(name = "is_zombie_visible", nullable = false)
+    @Column(name = "is_zombie_visible")
     private boolean isZombieVisible;
     private String description;
     @Column(name = "start_time")
