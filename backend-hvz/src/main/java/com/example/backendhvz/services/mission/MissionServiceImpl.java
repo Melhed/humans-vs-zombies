@@ -55,7 +55,7 @@ public class MissionServiceImpl implements MissionService{
 
     @Override
     public Mission updateMission(Mission mission, Long playerId) {
-        if(!missionRepository.existsById(mission.getId())) throw new NotFoundException("Mission with ID " + mission.getId() + " not found.");
+        if(!missionRepository.existsById(mission.getMissionID())) throw new NotFoundException("Mission with ID " + mission.getMissionID() + " not found.");
         if(!playerRepository.existsById(playerId)) throw new NotFoundException("Player with ID " + playerId + " not found.");
 
         Player player = playerRepository.findById(playerId).get();
