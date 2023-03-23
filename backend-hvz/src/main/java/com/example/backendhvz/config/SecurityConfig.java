@@ -25,7 +25,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/**").permitAll()
                         .requestMatchers("/api/v1/game/3/squad").hasRole("hvz-user")
                         // All other endpoints are protected
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer()
                 .jwt()

@@ -5,7 +5,6 @@ import com.example.backendhvz.exceptions.BadRequestException;
 import com.example.backendhvz.exceptions.NotFoundException;
 import com.example.backendhvz.exceptions.RestResponseEntityExceptionHandler;
 import com.example.backendhvz.mappers.HvZUserMapper;
-import com.example.backendhvz.models.AppUser;
 import com.example.backendhvz.models.HvZUser;
 import com.example.backendhvz.services.user.UserService;
 import org.springframework.http.ResponseEntity;
