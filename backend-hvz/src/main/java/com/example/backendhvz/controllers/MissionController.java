@@ -82,7 +82,7 @@ public class MissionController {
             if (!gameId.equals(missionDTO.getGameId()))
                 throw new BadRequestException("Mission's game ID doesn't match with the provided game ID.");
 
-            missionService.updateMission(missionMapper.missionDtoToMission(missionDTO), playerId);
+            missionService.updateMission(missionMapper.missionDtoToMission(missionDTO));
             URI location = URI.create("/" + missionDTO.getMissionID());
             return ResponseEntity.created(location).build();
         } catch(BadRequestException e) {

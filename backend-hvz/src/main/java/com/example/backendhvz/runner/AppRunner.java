@@ -77,8 +77,6 @@ public class AppRunner implements ApplicationRunner {
         addSquadCheckIn(games[2], squad, players[3]);
         addMission(games[2]);
         printPlayers(players);
-        System.out.println(playerController.findById(games[0].getId(), players[1].getId(), players[1].getId()));
-        System.out.println(squadController.findAllSquadChats(games[2].getId(), squad.getId(), players[2].getId()));
     }
 
     private void addSquadCheckIn(Game game, Squad squad, Player player) {
