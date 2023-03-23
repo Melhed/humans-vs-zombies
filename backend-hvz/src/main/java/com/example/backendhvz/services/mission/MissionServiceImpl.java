@@ -54,13 +54,8 @@ public class MissionServiceImpl implements MissionService{
     }
 
     @Override
-    public Mission updateMission(Mission mission, Long playerId) {
+    public Mission updateMission(Mission mission) {
         if(!missionRepository.existsById(mission.getMissionID())) throw new NotFoundException("Mission with ID " + mission.getMissionID() + " not found.");
-        if(!playerRepository.existsById(playerId)) throw new NotFoundException("Player with ID " + playerId + " not found.");
-
-        Player player = playerRepository.findById(playerId).get();
-        if (player.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administrators can update missions.");
-
         return update(mission);
     }
 
@@ -75,12 +70,8 @@ public class MissionServiceImpl implements MissionService{
         missionRepository.delete(mission);
     }
     @Override
-    public void deleteMissionById(Long missionId, Long playerId) {
+    public void deleteMissionById(Long missionId) {
         if(!missionRepository.existsById(missionId)) throw new NotFoundException("Mission with ID " + missionId + " not found.");
-        if(!playerRepository.existsById(playerId)) throw new NotFoundException("Player with ID " + playerId + " not found.");
-
-        Player player = playerRepository.findById(playerId).get();
-        if(player.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administrators can delete missions.");
         deleteById(missionId);
     }
 
@@ -91,19 +82,13 @@ public class MissionServiceImpl implements MissionService{
     }
 
     @Override
-    public Mission findMissionByIdAndGameId(Long gameId, Long missionId, Long playerId) {
+    public Mission findMissionByIdAndGameId(Long gameId, Long missionId) {
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
         if(!missionRepository.existsById(missionId)) throw new NotFoundException("Mission with ID " + missionId + " not found.");
-        if(!playerRepository.existsById(playerId)) throw new NotFoundException("Player with ID " + playerId + " not found.");
 
-        Player player = playerRepository.findById(playerId).get();
         Mission mission = findById(missionId);
-        if(!gameId.equals(player.getGame().getId())) throw new BadRequestException("Player isn't registered to the game with ID " + gameId + ".");
         if(!mission.getGame().getId().equals(gameId)) throw new BadRequestException("Mission isn't registered to the game with ID " + gameId + ".");
 
-        if(player.isHuman() && mission.isHumanVisible()) return mission;
-        if(!player.isHuman() && mission.isZombieVisible()) return mission;
-
-        throw new BadRequestException("Player has to be the same faction as the mission to get access.");
+        return mission;
     }
 }

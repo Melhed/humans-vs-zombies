@@ -10,9 +10,9 @@ import java.util.Collection;
 
 public interface KillService extends CRUDService<Kill, Long> {
 
-    Kill updateKill(Long gameId, Long killId, Long updatingPlayerId, KillDTO killDTO);
+    Kill updateKill(Long gameId, Long killId, KillDTO killDTO);
 
-    void deleteKillById(Long gameId, Long killId, Long deletingPlayerId);
+    void deleteKillById(Long gameId, Long killId);
 
     Collection<Kill> findAll(Long gameId) throws BadRequestException;
 

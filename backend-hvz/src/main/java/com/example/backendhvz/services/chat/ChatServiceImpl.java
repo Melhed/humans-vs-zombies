@@ -54,28 +54,18 @@ public class ChatServiceImpl implements ChatService {
         return chatRepository.findAllBySquad(null).get();
     }
     @Override
-    public Collection<Chat> findAllByGameId(Long gameId, boolean playerIsHuman) {
+    public Collection<Chat> findAllByGameId(Long gameId) {
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
-        if (playerIsHuman) return chatRepository.findAllByGameIdAndHumanGlobal(gameId).get();
-        return chatRepository.findAllByGameIdAndZombieGlobal(gameId).get();
+        return chatRepository.findAllByGameId(gameId).get();
     }
 
     @Override
-    public Collection<Chat> findAllBySquadIdAndFaction(Long squadId, Long playerId, Long gameId) throws BadRequestException, NotFoundException, ForbiddenException {
+    public Collection<Chat> findAllBySquadId(Long squadId, Long gameId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!squadRepository.existsById(squadId)) throw new NotFoundException("Squad id " + squadId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
-        Player player = playerRepository.findById(playerId).get();
         Squad squad = squadRepository.findById(squadId).get();
 
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
         if (!Objects.equals(squad.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match squads params");
-        if (!squadMemberRepository.existsBySquad_IdAndPlayer_Id(squadId, playerId))
-            throw new ForbiddenException("player with player id " + playerId + " is not part of squad with squad id " + squadId);
-        if (player.isHuman() != squad.isHuman())
-            throw new ForbiddenException("To get squad chat player needs to be the same fraction as squad");
-        if (player.getState() == PlayerState.NO_SQUAD || player.getState() == PlayerState.UNREGISTERED)
-            throw new ForbiddenException("To get squad chat player needs to be in a squad or admin");
         if (squad.isHuman())
             return chatRepository.findAllBySquad_IdAndHumanGlobal(squadId).get();
         return chatRepository.findAllBySquad_IdAndZombieGlobal(squadId).get();
@@ -94,19 +84,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat addSquadChat(Chat chat, Long gameId, Long playerId) throws BadRequestException, NotFoundException, ForbiddenException {
+    public Chat addSquadChat(Chat chat, Long gameId, Long squadId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
-
-        Player player = playerRepository.findById(playerId).get();
-
-        if (!Objects.equals(player, chat.getPlayer())) throw new BadRequestException("requested player is not same as chat is pointing at");
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
 
         if (chat.getPlayer().getState() == PlayerState.NO_SQUAD || chat.getPlayer().getState() == PlayerState.UNREGISTERED)
             throw new ForbiddenException("To add squad chat player needs to be in a squad or admin");
-        if (!squadMemberRepository.existsBySquad_IdAndPlayer_Id(chat.getSquad().getId(), playerId))
-            throw new ForbiddenException("player with player id " + playerId + " is not part of squad with squad id " + chat.getSquad().getId());
 
         return chatRepository.save(chat);
     }

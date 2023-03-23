@@ -81,14 +81,13 @@ public class KillController {
     }
 
     @PutMapping("{killId}")
-    public ResponseEntity update(@PathVariable Long gameId, @PathVariable Long killId, @RequestBody Long updatingPlayerId, @RequestBody KillDTO killDTO) {
+    public ResponseEntity update(@PathVariable Long gameId, @PathVariable Long killId, @RequestBody KillDTO killDTO) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if(killId == null) throw new BadRequestException("Kill ID cannot be null.");
-            if(updatingPlayerId == null) throw new BadRequestException("ID of updating Player cannot be null.");
             if(killDTO == null) throw new BadRequestException("Kill cannot be null.");
 
-            Kill kill = killService.updateKill(gameId, killId, updatingPlayerId, killDTO);
+            Kill kill = killService.updateKill(gameId, killId, killDTO);
             URI location = URI.create("/" + kill.getId());
             return ResponseEntity.created(location).build();
         } catch(BadRequestException e) {
@@ -101,13 +100,12 @@ public class KillController {
     }
 
     @DeleteMapping("{killId}")
-    public ResponseEntity deleteKillById(@PathVariable Long gameId, @PathVariable Long killId, @RequestBody Long deletingPlayerId) {
+    public ResponseEntity deleteKillById(@PathVariable Long gameId, @PathVariable Long killId) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if(killId == null) throw new BadRequestException("Kill ID cannot be null.");
-            if(deletingPlayerId == null) throw new BadRequestException("ID of deleting player cannot be null.");
 
-            killService.deleteKillById(gameId, killId, deletingPlayerId);
+            killService.deleteKillById(gameId, killId);
             return ResponseEntity.noContent().build();
         } catch(NotFoundException e) {
             return exceptionHandler.handleNotFound(e);

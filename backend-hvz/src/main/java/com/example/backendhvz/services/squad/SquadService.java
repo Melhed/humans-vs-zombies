@@ -19,11 +19,11 @@ public interface SquadService extends CRUDService<Squad, Long> {
     void leaveSquad(Long gameId, Long playerId);
 
     SquadCheckIn addCheckIn(Long gameId, Long squadId, SquadCheckIn checkIn);
-    Collection<SquadCheckIn> getSquadCheckIns(Long gameId, Long squadId, Long playerId);
+    Collection<SquadCheckIn> getSquadCheckIns(Long gameId, Long squadId);
 
-    Squad updateSquad(Long gameId, Long squadId, Squad squad, Long playerId);
+    Squad updateSquad(Long gameId, Long squadId, Squad squad);
 
-    void deleteSquadById(Long gameId, Long squadId, Long playerId);
+    void deleteSquadById(Long gameId, Long squadId);
 
     SquadDetailsDTO findDetailedSquad(Long gameId, Long squadId, Long playerId);
 }

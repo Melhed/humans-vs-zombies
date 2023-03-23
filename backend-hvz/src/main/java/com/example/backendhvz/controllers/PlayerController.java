@@ -31,11 +31,16 @@ public class PlayerController {
     }
 
 
+//    @GetMapping("{playerId}/squad")
+//    public ResponseEntity<Object> findPlayerSquadsById(@PathVariable Long gameId, @PathVariable Long playerId) {
+//
+//    }
+
     @GetMapping("{playerId}")
-    public ResponseEntity<Object> findById(@PathVariable Long gameId, @PathVariable Long playerId, @RequestBody Long requestingPlayerId) {
+    public ResponseEntity<Object> findById(@PathVariable Long gameId, @PathVariable Long playerId) {
         try {
-            if (gameId == null || playerId == null || requestingPlayerId == null) throw new BadRequestException("Invalid input");
-            return ResponseEntity.ok(playerService.findByIdAndPlayerState(gameId, playerId, requestingPlayerId));
+            if (gameId == null || playerId == null) throw new BadRequestException("Invalid input");
+            return ResponseEntity.ok(playerService.findByIdAndPlayerState(gameId, playerId));
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
@@ -44,10 +49,21 @@ public class PlayerController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAll(@PathVariable Long gameId, @RequestBody Long requestingPlayerId) {
+    public ResponseEntity<Object> findAll(@PathVariable Long gameId) {
         try {
-            if (gameId == null || requestingPlayerId == null) throw new BadRequestException("Invalid input");
-            return ResponseEntity.ok(playerService.findAllByPlayerState(gameId, requestingPlayerId));
+            return ResponseEntity.ok(playerService.findAll(gameId));
+        } catch (BadRequestException e) {
+            return exceptionHandler.handleBadRequest(e);
+        } catch (NotFoundException e) {
+            return exceptionHandler.handleNotFound(e);
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Object> findByUserId(@PathVariable Long gameId, @PathVariable String userId) {
+        try {
+            if (gameId == null || userId == null) throw new BadRequestException("Invalid input");
+            return ResponseEntity.ok(playerService.findByUserId(gameId, userId));
         } catch (BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch (NotFoundException e) {
@@ -84,7 +100,7 @@ public class PlayerController {
             if (!Objects.equals(gameId, playerDTO.getGame()))
                 throw new BadRequestException("Game id does not match players params");
             Player player = playerMapper.playerAdminDtoToPlayer(playerDTO);
-            return ResponseEntity.ok(playerService.updatePlayer(player, playerId));
+            return ResponseEntity.ok(playerService.updatePlayer(player));
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);
         } catch (NotFoundException e) {
@@ -93,10 +109,10 @@ public class PlayerController {
     }
 
     @DeleteMapping("{playerId}")
-    public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long playerId, @RequestBody Long requestingPlayerId) {
+    public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long playerId) {
         try {
-            if (gameId == null || playerId == null || requestingPlayerId == null) throw new BadRequestException("Invalid input");
-            playerService.deletePlayerById(playerId, requestingPlayerId, gameId);
+            if (gameId == null || playerId == null) throw new BadRequestException("Invalid input");
+            playerService.deletePlayerById(playerId, gameId);
             return ResponseEntity.noContent().build();
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);

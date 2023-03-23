@@ -58,8 +58,8 @@ public class KillServiceImpl implements KillService {
         if(!playerRepository.existsById(killPostDTO.getKillerId())) throw new NotFoundException("Killer with ID " + killPostDTO.getKillerId() + " not found.");
         if(!playerRepository.existsPlayerByBiteCodeAndGame_Id(killPostDTO.getBiteCode(), gameId)) throw new NotFoundException("Player with bite code " + killPostDTO.getBiteCode() + " not found.");
 
-        Player killPoster = playerRepository.findById(killPostDTO.getKillPosterId()).get();
-        if(killPoster.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("You need to be an " + PlayerState.ADMINISTRATOR + " to post a new kill!");
+//        Player killPoster = playerRepository.findById(killPostDTO.getKillPosterId()).get();
+//        if(killPoster.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("You need to be an " + PlayerState.ADMINISTRATOR + " to post a new kill!");
 
         Player killer = playerRepository.findById(killPostDTO.getKillerId()).get();
         if(!killer.getGame().getId().equals(gameId)) throw new BadRequestException("Killer is not in the game with the provided ID.");
@@ -84,20 +84,13 @@ public class KillServiceImpl implements KillService {
     }
 
     @Override
-    public Kill updateKill(Long gameId, Long killId, Long updatingPlayerId, KillDTO killDTO) {
+    public Kill updateKill(Long gameId, Long killId, KillDTO killDTO) {
         if(killDTO.getId() != killId) throw new BadRequestException("ID of kill object and kill you're trying to update is not the same.");
         if(!killDTO.getGame().equals(gameId)) throw new BadRequestException("Kill isn't attributed to the provided game with ID " + killDTO.getGame() + ".");
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
         if(!killRepository.existsById(killId)) throw new NotFoundException("Kill with ID " + killId + " not found.");
-        if(!playerRepository.existsById(updatingPlayerId)) throw new NotFoundException("Player with ID " + updatingPlayerId + " not found.");
 
         Kill kill = killMapper.killDtoToKill(killDTO);
-        Player updatingPlayer = playerRepository.findById(updatingPlayerId).get();
-
-        if(!Objects.equals(updatingPlayer.getId(), kill.getKiller().getId())
-                && updatingPlayer.getState() != PlayerState.ADMINISTRATOR
-        ) throw new ForbiddenException("Only administrators and the killer can update a kill.");
-
         return killRepository.save(kill);
     }
 
@@ -108,15 +101,11 @@ public class KillServiceImpl implements KillService {
     }
 
     @Override
-    public void deleteKillById(Long gameId, Long killId, Long deletingPlayerId) {
+    public void deleteKillById(Long gameId, Long killId) {
         if(!killRepository.existsById(killId)) throw new NotFoundException("Kill with ID " + killId + " not found.");
-        if(!playerRepository.existsById(deletingPlayerId)) throw new NotFoundException("Player with ID " + deletingPlayerId + " not found.");
 
         Kill kill = killRepository.findById(killId).get();
         if(!gameId.equals(kill.getGame().getId())) throw new BadRequestException("Kill isn't attributed to the game with ID " + gameId + ".");
-
-        Player deletingPlayer = playerRepository.findById(deletingPlayerId).get();
-        if(deletingPlayer.getState() != PlayerState.ADMINISTRATOR) throw new ForbiddenException("Only administrators can delete a kill.");
 
         killRepository.deleteById(killId);
     }
