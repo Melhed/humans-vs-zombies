@@ -2,7 +2,6 @@ package com.example.backendhvz.controllers;
 
 import com.example.backendhvz.dtos.ChatDTO;
 import com.example.backendhvz.dtos.GameDTO;
-import com.example.backendhvz.enums.GameState;
 import com.example.backendhvz.exceptions.BadRequestException;
 import com.example.backendhvz.exceptions.ForbiddenException;
 import com.example.backendhvz.exceptions.NotFoundException;
@@ -14,13 +13,14 @@ import com.example.backendhvz.models.Game;
 import com.example.backendhvz.services.chat.ChatService;
 import com.example.backendhvz.services.game.GameService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Collection;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping(path = "api/v1/game")
 public class GameController {
 
@@ -39,6 +39,7 @@ public class GameController {
     }
 
     @GetMapping("{gameId}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Object> findById(@PathVariable Long gameId) {
         try {
             if(gameId == null) throw new BadRequestException("Game ID cannot be null.");
@@ -75,6 +76,7 @@ public class GameController {
     }
 
     @PostMapping("/add-new-game")
+    @PreAuthorize("hasRole('hvz-admin')")
     public ResponseEntity<GameDTO> addNewGame(@RequestBody GameDTO gameDTO) {
         Game game = gameMapper.gameDtoToGame(gameDTO);
         gameService.addNewGame(game);
@@ -83,6 +85,7 @@ public class GameController {
     }
 
     @PutMapping("{gameId}")
+    @PreAuthorize("hasRole('hvz-admin')")
     public ResponseEntity update(@PathVariable Long gameId, @RequestBody Long updatingPlayerId, @RequestBody GameDTO gameDTO) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");

@@ -103,7 +103,7 @@ public class SquadServiceImpl implements SquadService{
 
     @Override
     public Collection<Squad> findSquadsByGameId(Long gameId) throws NotFoundException {
-        if (gameRepository.existsById(gameId)) throw new NotFoundException("Game Id " + gameId);
+        if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game Id " + gameId);
         return squadRepository.findSquadsByGame_Id(gameId).get();
     }
 
