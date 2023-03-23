@@ -21,9 +21,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 // Enable security for http requests
                 .authorizeHttpRequests(authorize -> authorize
-                        //.requestMatchers("/api/v1/game").permitAll()
-                        //.requestMatchers("/api/v1/user/**").permitAll()
-                        //.requestMatchers("/api/v1/game/3/squad").hasRole("hvz-user")
+                        .requestMatchers("/api/v1/game").permitAll()
+                        .requestMatchers("/api/v1/user/**").permitAll()
+                        .requestMatchers("/api/v1/game/3/squad").hasRole("hvz-user")
                         // All other endpoints are protected
                         .anyRequest().permitAll()
                 )
