@@ -21,4 +21,24 @@ public class HvZUser {
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
+    public HvZUser(String id, String first_name, String last_name) {
+        this.id = id;
+        this.firstName = first_name;
+        this.lastName = last_name;
+    }
+
+    @Column(name = "complete")
+    private boolean complete;
+
+    public void setUid(String uid) {
+        this.id = uid;
+    }
+
+    public void setComplete(boolean b) {
+        this.complete = b;
+    }
+
+    public String getUid() {
+        return this.id;
+    }
 }

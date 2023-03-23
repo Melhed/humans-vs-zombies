@@ -2,10 +2,10 @@ package com.example.backendhvz.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
@@ -21,27 +21,35 @@ public class SecurityConfig {
                 .csrf().disable()
                 // Enable security for http requests
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/**").permitAll()
-                        .requestMatchers("/api/v1/resources/public").permitAll()
-                        .requestMatchers("/api/v1/user").permitAll()
-                        .requestMatchers("/api/v1/game/3/player").permitAll()
-                        .requestMatchers("/api/v1/game/3/chat/**").permitAll()
-                        .requestMatchers("/api/v1/game/3/squad/").permitAll()
-                        .requestMatchers("/api/v1/game/3/squad/**").permitAll()
-                        .requestMatchers("/api/v1/game/3/chat/?player-is-human=true").permitAll()
-                        .requestMatchers("/api/v1/game/3/chat/?player-is-human=false").permitAll()
                         .requestMatchers("/api/v1/game").permitAll()
-                        .requestMatchers("/api/v1/game/**").permitAll()
-                        .requestMatchers("/api/v1/game/3/squad").permitAll()
-                        .requestMatchers("/api/v1/game/add-new-game").hasRole("hvz-admin")
-
-                        .requestMatchers("/api/v1/resources/authorized/offline").hasRole("offline_access")
+                        .requestMatchers("/api/v1/user/**").permitAll()
+                        .requestMatchers("/api/v1/game/3/squad").hasRole("hvz-user")
                         // All other endpoints are protected
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer()
-                .jwt();
+                .jwt()
+                .jwtAuthenticationConverter(jwtAuthenticationConverter());
         return http.build();
+    }
+
+    /*@Bean
+    public JwtAuthenticationConverter jwtRoleAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        // Use roles claim as authorities
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+        // Add the ROLE_ prefix - for hasRole
+        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }*/
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
     }
 }

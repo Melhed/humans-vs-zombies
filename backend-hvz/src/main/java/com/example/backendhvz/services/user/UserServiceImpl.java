@@ -33,6 +33,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public HvZUser add(String uid) {
+        // Prevents internal server error for duplicates
+        if(userRepository.existsById(uid))
+            throw new BadRequestException("AppUserServiceImpl: add, filed");
+        // Create new user
+        HvZUser user = new HvZUser();
+        user.setUid(uid);
+        user.setComplete(false);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public HvZUser getById(String uid) {
+        return userRepository.findById(uid)
+                .orElseThrow(() -> new BadRequestException("UserServiceImpl: getById, user not found"));
+    }
+
+    @Override
     public HvZUser update(HvZUser user) {
         return userRepository.save(user);
     }

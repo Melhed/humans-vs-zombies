@@ -17,18 +17,22 @@ public class Mission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mission_id")
-    private Long id;
-    @Column(nullable = false, length = 100)
+    private Long missionID;
+    @Column(length = 100)
     private String name;
-    @Column(name = "is_human_visible", nullable = false)
+    @Column(name = "is_human_visible")
     private boolean isHumanVisible;
-    @Column(name = "is_zombie_visible", nullable = false)
+    @Column(name = "is_zombie_visible")
     private boolean isZombieVisible;
     private String description;
     @Column(name = "start_time")
     private Date startTime;
     @Column(name = "end_time")
     private Date endTime;
+    @Column(name = "lat")
+    private Long lat;
+    @Column(name = "lng")
+    private Long lng;
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     private Game game;

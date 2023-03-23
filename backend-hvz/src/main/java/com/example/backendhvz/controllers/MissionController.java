@@ -12,10 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Collection;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping("api/v1/game/{gameId}/mission")
 public class MissionController {
     private final MissionService missionService;
@@ -64,7 +63,7 @@ public class MissionController {
 
             missionDTO.setGameId(gameId);
             Mission mission = missionMapper.missionDtoToMission(missionDTO);
-            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.addMission(mission)));
+            return ResponseEntity.ok(missionMapper.missionToMissionDto(missionService.add(mission)));
         } catch(BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);
         } catch(NotFoundException e) {
@@ -83,8 +82,8 @@ public class MissionController {
             if (!gameId.equals(missionDTO.getGameId()))
                 throw new BadRequestException("Mission's game ID doesn't match with the provided game ID.");
 
-            missionService.updateMission(missionMapper.missionDtoToMission(missionDTO));
-            URI location = URI.create("/" + missionDTO.getId());
+            missionService.updateMission(missionMapper.missionDtoToMission(missionDTO), playerId);
+            URI location = URI.create("/" + missionDTO.getMissionID());
             return ResponseEntity.created(location).build();
         } catch(BadRequestException e) {
             return exceptionHandler.handleBadRequest(e);

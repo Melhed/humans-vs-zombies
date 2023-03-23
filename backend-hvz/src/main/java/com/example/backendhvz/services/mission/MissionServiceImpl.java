@@ -78,7 +78,7 @@ public class MissionServiceImpl implements MissionService{
     @Override
     public Collection<Mission> findMissionsByGameId(Long gameId) {
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
-        return missionRepository.findAll();
+        return missionRepository.findMissionsByGameId(gameId).get();
     }
 
     @Override
