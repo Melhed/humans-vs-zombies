@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     Collection<Player> findAllByGameId(Long gameId);
+    Optional deleteAllByGameId(Long gameId);
     boolean existsPlayerByBiteCodeAndGame_Id(String biteCode, Long gameId);
     Optional<Player> findByBiteCode(String biteCode);
     Optional<Player> findByGameIdAndUserId(Long gameId, String userId);

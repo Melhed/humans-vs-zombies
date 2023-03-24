@@ -79,6 +79,14 @@ public class KillServiceImpl implements KillService {
     }
 
     @Override
+    public void deleteKillByPlayerId(Long playerId) {
+        if(!killRepository.existsByKillerId(playerId).get() && !killRepository.existsByVictimId(playerId).get()) {
+            throw new NotFoundException("No kill found containing " + playerId + " as killer or victim.");
+        }
+        killRepository.deleteKillByPlayerId(playerId);
+    }
+
+    @Override
     public Kill update(Kill kill) {
         return killRepository.save(kill);
     }

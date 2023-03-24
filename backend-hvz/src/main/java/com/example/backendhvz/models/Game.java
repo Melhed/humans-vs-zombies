@@ -6,6 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -30,7 +35,6 @@ public class Game {
     private Timestamp startTime;
     @Column(name = "end_time")
     private Timestamp endTime;
-
     @Column(name = "nw_lat", nullable = false)
     private String nwLat;
     @Column(name = "nw_lng", nullable = false)

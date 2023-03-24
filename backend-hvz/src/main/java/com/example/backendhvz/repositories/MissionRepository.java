@@ -22,4 +22,6 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
     @Modifying
     @Query("select m from Mission m where m.game.id = ?1")
     Optional<Collection<Mission>> findMissionsByGameId(Long gameId);
+
+    Optional deleteAllByGameId(Long gameId);
 }

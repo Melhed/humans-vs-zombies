@@ -1,14 +1,11 @@
 package com.example.backendhvz.services.game;
 
 import com.example.backendhvz.enums.GameState;
-import com.example.backendhvz.enums.PlayerState;
-import com.example.backendhvz.exceptions.ForbiddenException;
 import com.example.backendhvz.exceptions.NotFoundException;
 import com.example.backendhvz.models.Game;
-import com.example.backendhvz.models.Player;
-import com.example.backendhvz.repositories.GameRepository;
-import com.example.backendhvz.repositories.PlayerRepository;
+import com.example.backendhvz.repositories.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -17,10 +14,22 @@ public class GameServiceImpl implements GameService {
 
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
+    private final ChatRepository chatRepository;
+    private final KillRepository killRepository;
+    private final MissionRepository missionRepository;
+    private final SquadRepository squadRepository;
+    private final SquadCheckInRepository squadCheckInRepository;
+    private final SquadMemberRepository squadMemberRepository;
 
-    public GameServiceImpl(GameRepository gameRepository, PlayerRepository playerRepository) {
+    public GameServiceImpl(GameRepository gameRepository, PlayerRepository playerRepository, ChatRepository chatRepository, KillRepository killRepository, MissionRepository missionRepository, SquadRepository squadRepository, SquadCheckInRepository squadCheckInRepository, SquadMemberRepository squadMemberRepository) {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
+        this.chatRepository = chatRepository;
+        this.killRepository = killRepository;
+        this.missionRepository = missionRepository;
+        this.squadRepository = squadRepository;
+        this.squadCheckInRepository = squadCheckInRepository;
+        this.squadMemberRepository = squadMemberRepository;
     }
 
     @Override
@@ -72,8 +81,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional
     public void deleteGameById(Long gameId) {
         if(!gameRepository.existsById(gameId)) throw new NotFoundException("Game with ID " + gameId + " not found.");
+        squadCheckInRepository.deleteAllByGameId(gameId);
+        squadMemberRepository.deleteAllByGameId(gameId);
+        squadRepository.deleteAllByGameId(gameId);
+        killRepository.deleteAllByGameId(gameId);
+        missionRepository.deleteAllByGameId(gameId);
+        chatRepository.deleteAllByGameId(gameId);
+        playerRepository.deleteAllByGameId(gameId);
         gameRepository.deleteById(gameId);
     }
 

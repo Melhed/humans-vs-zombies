@@ -8,9 +8,8 @@ import com.example.backendhvz.exceptions.ForbiddenException;
 import com.example.backendhvz.exceptions.NotFoundException;
 import com.example.backendhvz.mappers.PlayerMapper;
 import com.example.backendhvz.models.Player;
-import com.example.backendhvz.repositories.GameRepository;
-import com.example.backendhvz.repositories.PlayerRepository;
-import com.example.backendhvz.repositories.UserRepository;
+import com.example.backendhvz.models.SquadMember;
+import com.example.backendhvz.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -25,12 +24,20 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerMapper playerMapper;
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
+    private final SquadMemberRepository squadMemberRepository;
+    private final ChatRepository chatRepository;
+    private final KillRepository killRepository;
+    private final SquadCheckInRepository squadCheckInRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerMapper playerMapper, GameRepository gameRepository, UserRepository userRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerMapper playerMapper, GameRepository gameRepository, UserRepository userRepository, SquadMemberRepository squadMemberRepository, ChatRepository chatRepository, KillRepository killRepository, SquadCheckInRepository squadCheckInRepository) {
         this.playerRepository = playerRepository;
         this.playerMapper = playerMapper;
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
+        this.squadMemberRepository = squadMemberRepository;
+        this.chatRepository = chatRepository;
+        this.killRepository = killRepository;
+        this.squadCheckInRepository = squadCheckInRepository;
     }
 
     @Override
@@ -133,11 +140,19 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.deleteById(playerId);
     }
 
-    // TODO: This should be cascading
     @Override
     public void deletePlayerById(Long playerId, Long gameId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!playerRepository.existsById(playerId)) throw new NotFoundException("player id " + playerId);
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
+
+
+        killRepository.deleteKillByPlayerId(playerId);
+        SquadMember squadMember = squadMemberRepository.findSquadMemberByGame_IdAndPlayerId(gameId, playerId).get();
+        if(squadMember != null) {
+            squadCheckInRepository.deleteAllBySquadMemberId(squadMember.getId());
+        }
+        squadMemberRepository.deleteByPlayerId(playerId);
+        chatRepository.deleteAllByPlayerId(playerId);
         playerRepository.deleteById(playerId);
     }
 

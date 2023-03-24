@@ -35,6 +35,12 @@ public abstract class SquadCheckInMapper {
     @Mapping(target = "game", source = "gameId", qualifiedByName = "gameIdToGame")
     @Mapping(target = "squadMember", source = "squadMemberId", qualifiedByName = "squadMemberIdToSquadMember")
     public abstract SquadCheckIn checkInDTOTocheckIn(CheckInDTO checkInDTO);
+
+    @Mapping(target = "squad", source = "squadId", qualifiedByName = "squadIdToSquad")
+    @Mapping(target = "game", source = "gameId", qualifiedByName = "gameIdToGame")
+    @Mapping(target = "squadMember", source = "squadMemberId", qualifiedByName = "squadMemberIdToSquadMember")
+    public abstract Collection<SquadCheckIn> checkInDTOsTocheckIn(Collection<CheckInDTO> checkInDTOs);
+
     @Named("gameIdToGame")
     Game mapGameIdToGame(Long gameId) {
         if(gameId == null) return null;

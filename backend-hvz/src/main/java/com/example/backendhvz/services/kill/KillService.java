@@ -17,4 +17,7 @@ public interface KillService extends CRUDService<Kill, Long> {
     Collection<Kill> findAll(Long gameId) throws BadRequestException;
 
     Kill addKill(Long gameId, KillPostDTO killPostDTO);
+
+    void deleteKillByPlayerId(Long playerId);
+
 }
