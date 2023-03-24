@@ -78,9 +78,7 @@ public class PlayerController {
         if (!Objects.equals(gameId, playerDTO.getGame()))
             return exceptionHandler.handleBadRequest(new BadRequestException("Game id does not match players params"));
         Player player = playerMapper.playerAdminDtoToPlayer(playerDTO);
-        URI location = URI.create("/" + player.getId());
-        playerService.add(player);
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.ok(playerMapper.playerToPlayerDto(playerService.add(player)));
     }
 
     @PostMapping("u")
