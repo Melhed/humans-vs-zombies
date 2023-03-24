@@ -39,5 +39,8 @@ public class Game {
     private String seLat;
     @Column(name = "se_lng", nullable = false)
     private String seLng;
-
+    @Column(name = "max_players")
+    private Integer maxPlayers;
+    @Column(name = "registered_players")
+    private Integer registeredPlayers;
 }

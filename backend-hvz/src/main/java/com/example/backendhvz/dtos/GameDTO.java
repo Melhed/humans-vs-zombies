@@ -3,7 +3,6 @@ package com.example.backendhvz.dtos;
 import com.example.backendhvz.enums.GameState;
 import lombok.Data;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data
@@ -17,4 +16,6 @@ public class GameDTO {
     private String nwLng;
     private String seLat;
     private String seLng;
+    private Integer maxPlayers;
+    private Integer registeredPlayers;
 }

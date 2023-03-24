@@ -114,9 +114,9 @@ public class AppRunner implements ApplicationRunner {
 
     private Game[] createGames() {
         Game[] games = new Game[3];
-        games[0] = new Game(1L, "Complete game", GameState.COMPLETE, new Timestamp(System.currentTimeMillis()-300), new Timestamp(System.currentTimeMillis()-200), "1", "2", "3", "4");
-        games[1] = new Game(2L, "Active game", GameState.IN_PROGRESS, new Timestamp(System.currentTimeMillis()-300), new Timestamp(System.currentTimeMillis()+200), "1", "2", "3", "4");
-        games[2] = new Game(3L, "Registration game", GameState.REGISTRATION, new Timestamp(System.currentTimeMillis()+300), new Timestamp(System.currentTimeMillis()+800), "1", "2", "3", "4");
+        games[0] = new Game(1L, "Complete game", GameState.COMPLETE, new Timestamp(System.currentTimeMillis()-300), new Timestamp(System.currentTimeMillis()-200), "1", "2", "3", "4", 10, 10);
+        games[1] = new Game(2L, "Active game", GameState.IN_PROGRESS, new Timestamp(System.currentTimeMillis()-300), new Timestamp(System.currentTimeMillis()+200), "1", "2", "3", "4", 15, 13);
+        games[2] = new Game(3L, "Registration game", GameState.REGISTRATION, new Timestamp(System.currentTimeMillis()+300), new Timestamp(System.currentTimeMillis()+800), "1", "2", "3", "4",5,0);
 
         for (int i = 0; i < games.length; i++)
             gameController.add(gameMapper.gameToGameDto(games[i]));
