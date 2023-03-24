@@ -12,6 +12,8 @@ import com.example.backendhvz.models.Chat;
 import com.example.backendhvz.models.Game;
 import com.example.backendhvz.services.chat.ChatService;
 import com.example.backendhvz.services.game.GameService;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

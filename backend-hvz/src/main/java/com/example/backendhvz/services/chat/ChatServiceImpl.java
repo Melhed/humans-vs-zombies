@@ -5,7 +5,6 @@ import com.example.backendhvz.exceptions.BadRequestException;
 import com.example.backendhvz.exceptions.ForbiddenException;
 import com.example.backendhvz.exceptions.NotFoundException;
 import com.example.backendhvz.models.Chat;
-import com.example.backendhvz.models.Player;
 import com.example.backendhvz.models.Squad;
 
 import com.example.backendhvz.repositories.*;
@@ -96,6 +95,18 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat update(Chat chat) {
         return chatRepository.save(chat);
+    }
+
+    @Override
+    public void deleteBySquadId(Long squadId) {
+        if(!chatRepository.existsBySquadId(squadId).get()) throw new NotFoundException("No chats found with squad ID " + squadId);
+        chatRepository.deleteAllBySquadId(squadId);
+    }
+
+    @Override
+    public void deleteByPlayerId(Long playerId) {
+        if(!chatRepository.existsByPlayerId(playerId).get()) throw new NotFoundException("No chats found by player with ID " + playerId);
+        chatRepository.deleteAllByPlayerId(playerId);
     }
 
     @Override

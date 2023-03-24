@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface SquadRepository extends JpaRepository<Squad, Long> {
     Optional<Collection<Squad>> findSquadsByGame_Id(Long gameId);
     Optional<Squad> findSquadByIdAndGame_Id(Long gameId, Long squadId);
+    Optional deleteAllByGameId(Long gameId);
 
 }

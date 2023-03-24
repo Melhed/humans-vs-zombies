@@ -8,4 +8,7 @@ import java.util.Optional;
 
 public interface SquadCheckInRepository extends JpaRepository<SquadCheckIn, Long> {
     Optional<Collection<SquadCheckIn>> findAllBySquad_Id(Long squadId);
+    Optional deleteAllByGameId(Long gameId);
+    Optional deleteAllBySquadId(Long squadId);
+    Optional deleteAllBySquadMemberId(Long squadMemberId);
 }

@@ -24,14 +24,16 @@ public class SquadServiceImpl implements SquadService{
     private final GameRepository gameRepository;
     private final SquadMemberRepository squadMemberRepository;
     private final SquadCheckInRepository squadCheckInRepository;
+    private final ChatRepository chatRepository;
     private final SquadMemberMapper squadMemberMapper;
 
-    public SquadServiceImpl(SquadRepository squadRepository, PlayerRepository playerRepository, GameRepository gameRepository, SquadMemberRepository squadMemberRepository, SquadCheckInRepository squadCheckInRepository, SquadMemberMapper squadMemberMapper) {
+    public SquadServiceImpl(SquadRepository squadRepository, PlayerRepository playerRepository, GameRepository gameRepository, SquadMemberRepository squadMemberRepository, SquadCheckInRepository squadCheckInRepository, ChatRepository chatRepository, SquadMemberMapper squadMemberMapper) {
         this.squadRepository = squadRepository;
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.squadMemberRepository = squadMemberRepository;
         this.squadCheckInRepository = squadCheckInRepository;
+        this.chatRepository = chatRepository;
         this.squadMemberMapper = squadMemberMapper;
     }
 
@@ -78,8 +80,9 @@ public class SquadServiceImpl implements SquadService{
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!squadRepository.existsById(squadId)) throw new NotFoundException("Squad id " + squadId);
 
-        Squad squad = squadRepository.findById(squadId).get();
-        if (!Objects.equals(squad.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match squad params");
+        chatRepository.deleteAllBySquadId(squadId);
+        squadCheckInRepository.deleteAllBySquadId(squadId);
+        squadMemberRepository.deleteAllBySquadId(squadId);
 
         deleteById(squadId);
     }
@@ -97,17 +100,13 @@ public class SquadServiceImpl implements SquadService{
     }
 
     @Override
-    public SquadDetailsDTO findDetailedSquad(Long gameId, Long squadId, Long playerId) throws BadRequestException, NotFoundException, ForbiddenException {
+    public SquadDetailsDTO findDetailedSquad(Long gameId, Long squadId) throws BadRequestException, NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!squadRepository.existsById(squadId)) throw new NotFoundException("Squad id " + squadId);
-        if (!playerRepository.existsById(playerId)) throw new NotFoundException("Player id " + playerId);
-        Player player = playerRepository.findById(playerId).get();
         Squad squad = findById(squadId);
 
-        if (!Objects.equals(player.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match players params");
         if (!Objects.equals(squad.getGame().getId(), gameId)) throw new BadRequestException("Game id does not match squads params");
 
-        if (player.getState() != PlayerState.SQUAD_MEMBER) throw new ForbiddenException("Ony squad members can get detailed information");
         Set<SquadMemberDetailsDTO> squadMembers = squadMemberMapper.squadMembersToSquadMemberDetailsDtos(squadMemberRepository.findAllBySquadId(squadId).get()).stream().collect(Collectors.toSet());
         return new SquadDetailsDTO(squadId, squad.getName(), squad.isHuman(), squadMembers);
     }
@@ -159,6 +158,8 @@ public class SquadServiceImpl implements SquadService{
         Player player = playerRepository.findById(playerId).get();
         if (gameId != player.getGame().getId() || player.getState() != PlayerState.SQUAD_MEMBER) return;
         player.setState(PlayerState.NO_SQUAD);
+
+        squadCheckInRepository.deleteAllBySquadMemberId(playerId);
         squadMemberRepository.deleteByPlayerId(playerId);
         playerRepository.save(player);
     }

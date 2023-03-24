@@ -25,5 +25,6 @@ public interface SquadService extends CRUDService<Squad, Long> {
 
     void deleteSquadById(Long gameId, Long squadId);
 
-    SquadDetailsDTO findDetailedSquad(Long gameId, Long squadId, Long playerId);
+    SquadDetailsDTO findDetailedSquad(Long gameId, Long squadId);
+
 }
