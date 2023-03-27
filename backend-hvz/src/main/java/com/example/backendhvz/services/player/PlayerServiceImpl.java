@@ -160,7 +160,9 @@ public class PlayerServiceImpl implements PlayerService {
     public Player findByUserId(Long gameId, String userId) {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("game id " + gameId);
         if (!userRepository.existsById(userId)) throw new NotFoundException("user id " + userId);
-        return playerRepository.findByGameIdAndUserId(gameId, userId).get();
+        return playerRepository.findByGameIdAndUserId(gameId, userId).isPresent() ?
+                playerRepository.findByGameIdAndUserId(gameId, userId).get():
+                null;
     }
 
     @Override
