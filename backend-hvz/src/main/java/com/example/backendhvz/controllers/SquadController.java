@@ -12,14 +12,9 @@ import com.example.backendhvz.mappers.SquadMemberMapper;
 import com.example.backendhvz.models.Squad;
 import com.example.backendhvz.services.chat.ChatService;
 import com.example.backendhvz.services.squad.SquadService;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Collection;
 
 @RestController
@@ -145,7 +140,6 @@ public class SquadController {
     public ResponseEntity<Object> addSquadCheckIn(@PathVariable Long gameId, @PathVariable Long squadId, @RequestBody CheckInDTO checkInDTO) {
         try {
             if (gameId == null || squadId == null || checkInDTO == null) throw new BadRequestException("Invalid input");
-            checkInDTO.setTimestamp(Timestamp.from(Instant.now()));
             return ResponseEntity.ok(squadCheckInMapper.checkInTocheckInDTO(squadService.addCheckIn(gameId, squadId, squadCheckInMapper.checkInDTOTocheckIn(checkInDTO))));
         } catch (ForbiddenException e) {
             return exceptionHandler.handleForbidden(e);
@@ -177,7 +171,6 @@ public class SquadController {
     }
 
     @DeleteMapping("{squadId}")
-    @Cascade(CascadeType.ALL)
     public ResponseEntity deleteById(@PathVariable Long gameId, @PathVariable Long squadId) {
         try {
             if (gameId == null || squadId == null) throw new BadRequestException("Invalid input");
