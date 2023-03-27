@@ -88,7 +88,7 @@ public class GameController {
 
     @PutMapping("{gameId}")
     @PreAuthorize("hasRole('hvz-admin')")
-    public ResponseEntity update(@PathVariable Long gameId, @RequestBody Long updatingPlayerId, @RequestBody GameDTO gameDTO) {
+    public ResponseEntity update(@PathVariable Long gameId, @RequestBody GameDTO gameDTO) {
         try {
             if (gameId == null) throw new BadRequestException("Game ID cannot be null.");
             if (gameDTO == null) throw new BadRequestException("Game cannot be null.");
