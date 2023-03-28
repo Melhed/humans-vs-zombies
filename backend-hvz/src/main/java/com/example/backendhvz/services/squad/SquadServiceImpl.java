@@ -12,6 +12,7 @@ import com.example.backendhvz.models.*;
 import com.example.backendhvz.repositories.*;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -171,6 +172,7 @@ public class SquadServiceImpl implements SquadService{
 
         Squad squad = squadRepository.findById(squadId).get();
         Player player = checkIn.getSquadMember().getPlayer();
+        checkIn.setTimestamp(new Timestamp(System.currentTimeMillis()));
 
         if (squad.isHuman() != player.isHuman())
             throw new ForbiddenException("To add squad check ins player needs to be the same fraction as squad");

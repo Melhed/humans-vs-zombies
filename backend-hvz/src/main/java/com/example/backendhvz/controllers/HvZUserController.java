@@ -59,13 +59,6 @@ public class HvZUserController {
         );
     }
 
-    @PostMapping("register")
-    public ResponseEntity addNewUserFromJwt(@AuthenticationPrincipal Jwt jwt) {
-        HvZUser user = userService.add(jwt.getClaimAsString("sub"));
-        URI uri = URI.create("api/v1/users/" + user.getUid());
-        return ResponseEntity.created(uri).build();
-    }
-
     @GetMapping
     public ResponseEntity<Collection<HvZUserDTO>> findAll() {
         return ResponseEntity.ok(hvZUserMapper.hvZUsersToHvZUserDtos(userService.findAll()));
