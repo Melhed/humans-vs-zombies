@@ -115,7 +115,6 @@ public class SquadServiceImpl implements SquadService{
     public Squad addSquad(Long gameId, SquadPostDTO squadPostDTO)  throws BadRequestException, NotFoundException, ForbiddenException {
         if (!gameRepository.existsById(gameId)) throw new NotFoundException("Game id " + gameId);
         if (!playerRepository.existsById(squadPostDTO.getPlayerId())) throw new NotFoundException("player id " + squadPostDTO.getPlayerId());
-        System.out.println("=>>>>>>>>>>>>>>>>>>>>>>>>>" + squadPostDTO.getSquadName() + " " + squadPostDTO.getPlayerId());
         Player player = playerRepository.findById(squadPostDTO.getPlayerId()).get();
         Game game = gameRepository.findById(gameId).get();
 

@@ -85,7 +85,6 @@ public class HvZUserController {
 
     @PostMapping
     public ResponseEntity<HvZUserDTO> add(@RequestBody HvZUserDTO userDTO) {
-        System.out.println(userDTO);
         HvZUser user = hvZUserMapper.hvZUserDTOToHvZUser(userDTO);
         userService.add(user);
         URI location = URI.create("/" + user.getId());
