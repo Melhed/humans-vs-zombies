@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
@@ -19,5 +20,9 @@
         <module name="humans-vs-zombies.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="com.example.backend-hvz" target="17" />
+      <module name="com.example.backend-hvz.main~1" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
