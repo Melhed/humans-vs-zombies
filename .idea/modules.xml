@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend-hvz.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend-hvz.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/humans-vs-zombies.main.iml" filepath="$PROJECT_DIR$/.idea/modules/humans-vs-zombies.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/humans-vs-zombies.test.iml" filepath="$PROJECT_DIR$/.idea/modules/humans-vs-zombies.test.iml" />
     </modules>
   </component>
 </project>
