@@ -13,8 +13,6 @@ public class ResourceController {
 
     @GetMapping("public")
     public ResponseEntity getPublic() {
-        /*ResponseMessage message = new ResponseMessage();
-        message.setMessage("Public resources");*/
         return ResponseEntity.ok("public");
     }
 

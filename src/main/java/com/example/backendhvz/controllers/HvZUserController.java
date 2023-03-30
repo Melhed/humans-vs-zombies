@@ -33,6 +33,7 @@ public class HvZUserController {
         this.exceptionHandler = exceptionHandler;
     }
 
+    //Getting info from the JWT as it is without any Spring Security processing
     @GetMapping("info")
     public ResponseEntity getLoggedInUserInfo(@AuthenticationPrincipal Jwt principal) {
         Map<String, String> map = new HashMap<>();
@@ -45,6 +46,7 @@ public class HvZUserController {
         return ResponseEntity.ok(map);
     }
 
+    //Getting info that Spring Security passes around to make sure everything is done according to configuration
     @GetMapping("principal")
     public ResponseEntity getPrincipal(Principal user){
         return ResponseEntity.ok(user);
@@ -53,9 +55,9 @@ public class HvZUserController {
     @GetMapping("current")
     public ResponseEntity getCurrentlyLoggedInUser(@AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(
-                userService.findById(
-                        jwt.getClaimAsString("sub")
-                )
+            userService.findById(
+                jwt.getClaimAsString("sub")
+            )
         );
     }
 
