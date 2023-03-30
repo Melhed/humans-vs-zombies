@@ -37,6 +37,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    //Configuration for frontend and backend domain interaction
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -48,6 +49,7 @@ public class SecurityConfig {
         return source;
     }
 
+    //Converting roles properties of the JWT to correspond to the correct claim
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
