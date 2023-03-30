@@ -11,13 +11,13 @@ public class MissionDTO {
     private String description;
     private Date startTime;
     private Date endTime;
-    private Integer lat;
-    private Integer lng;
+    private String lat;
+    private String lng;
     private boolean isHumanVisible;
     private boolean isZombieVisible;
     private Long gameId;
 
-    public MissionDTO(long i, String test, String testMission, Date startDate, Date endDate, int i1, int i2, boolean b, boolean b1, Long id) {
+    public MissionDTO(long i, String test, String testMission, Date startDate, Date endDate, String i1, String i2, boolean b, boolean b1, Long id) {
         this.missionID = i;
         this.name = test;
         this.description = testMission;

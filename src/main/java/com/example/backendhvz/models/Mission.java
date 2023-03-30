@@ -30,9 +30,9 @@ public class Mission {
     @Column(name = "end_time")
     private Date endTime;
     @Column(name = "lat")
-    private Long lat;
+    private String lat;
     @Column(name = "lng")
-    private Long lng;
+    private String lng;
     @ManyToOne
     @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     private Game game;
